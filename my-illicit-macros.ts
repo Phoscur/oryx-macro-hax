@@ -15,19 +15,9 @@ const macroExtensions = {
 
     // Git shortcuts
     "add": newMacro(0)
-        .typeAlphanumeric("git ")
-        .typeAlphanumeric("add ")
-        .tapKey("X_HYPHEN")
-        .withShift(newMacro().typeAlphanumeric("a")),
+        .typeAlphanumeric("git add -A"),
     "comm": newMacro(1)
-        .typeAlphanumeric("git ")
-        .typeAlphanumeric("commit ")
-        .tapKey("X_HYPHEN")
-        .typeAlphanumeric("m ")
-        .withShift(
-            newMacro()
-                .tapKey("X_QUOTE")
-                .tapKey("X_QUOTE"))
+        .typeAlphanumeric("git commit -m \"\"")
         .tapKey("X_LEFT"),
     "push": newMacro(1)
         .typeAlphanumeric("git push"),
@@ -80,8 +70,7 @@ const macroExtensions = {
         .tapKey("X_LEFT")
         .tapKey("X_ENTER"),
     "expo": newMacro()
-        .typeAlphanumeric("export")
-        .tapKey("X_SPACE"),
+        .typeAlphanumeric("export "),
     // .forEach((el) => {})
     "fore": newMacro()
         .typeAlphanumeric(".forEach")
@@ -111,8 +100,7 @@ const macroExtensions = {
         .tapKey("X_LEFT")
         .typeAlphanumeric("el")
         .tapKey("X_RIGHT")
-        .tapKey("X_SPACE")
-        .tapKey("X_EQUAL")
+        .typeAlphanumeric(" =")
         // Type >
         .withShift(newMacro().tapKey("X_DOT"))
         .tapKey("X_SPACE")

@@ -70,8 +70,17 @@ export const newMacro: (expectedReplacementCount?: number) => MacroBuilder = (er
                 else if (char === "+") {
                     self.tapKey("X_PLUS")
                 }
+                else if (char === "-") {
+                    self.tapKey("X_MINUS")
+                }
                 else if (char === "/") {
                     self.tapKey("X_SLASH")
+                }
+                else if (char === "'") {
+                    self.tapKey("X_QUOTE")
+                }
+                else if (char === '"') {
+                    self.withShift(newMacro().tapKey("X_QUOTE"))
                 }
                 else {
                     throw Error("Unsupported char in typeAlphanumeric: " + char + ", use typeRaw instead?")
@@ -108,8 +117,8 @@ export const newMacro: (expectedReplacementCount?: number) => MacroBuilder = (er
         build: () => {
             const cmds = commands.map((cmd) => cmd())
             // Trim delays off the ends of commands
-            while (cmds.length > 0 && cmds[cmds.length-1].startsWith("SS_DELAY")) {
-                cmds.splice(cmds.length-1, 1)
+            while (cmds.length > 0 && cmds[cmds.length - 1].startsWith("SS_DELAY")) {
+                cmds.splice(cmds.length - 1, 1)
             }
             return cmds.join(" ");
         }
