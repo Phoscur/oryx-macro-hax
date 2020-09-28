@@ -14,6 +14,14 @@ When done, download the "Source" (don't download the compiled binary), unzip it 
 
 ## 2. Create a mapping in this script
 
+Install on the command line (with Node.js installed) using:
+
+```
+cd path/to/ergodox-macro-hax
+
+npm install
+```
+
 Grab my-illicit-macros.ts and change it to what you need, starting with the absolute directory path `SOURCE_DIR` pointed to the unzipped directory that contains the "keymap.c" file (NOT usually in the root directory!) you noted in step 1.  Now open my-illicit-macros.ts and modify to match your configuration.
 
 Here's an example of creating an extended (more than 4 button) macro:
