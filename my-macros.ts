@@ -13,11 +13,13 @@ const macroExtensions = {
         .tapKey("X_LGUI", 100)
         .typeAlphanumeric("visual studio c\n"),
         
+    "poke": newMacro()
+        .withShift(newMacro().typeAlphanumeric("1")) // ^1 = !
+        .typeAlphanumeric("pokecatch "),
+
     "gg": newMacro()
-        .withShift(newMacro()
-            .tapKey("X_LBRACKET")
-            .typeAlphanumeric("gg")
-            .tapKey("X_RBRACKET"))
+        .tapKey("X_ENTER")
+        .withShift(newMacro().typeAlphanumeric("8gg9")) // ^8 = (, ^9 = )
         .tapKey("X_ENTER"),
 
     // Git shortcuts
