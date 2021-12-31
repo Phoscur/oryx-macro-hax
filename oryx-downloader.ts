@@ -19,62 +19,17 @@ async function getSourceLink(layoutName, revisionId = 'latest') {
   query getLayout($hashId: String!, $revisionId: String!, $geometry: String) {
       Layout(hashId: $hashId, geometry: $geometry, revisionId: $revisionId) {
         ...LayoutData
-        __typename
       }
     }
 
   fragment LayoutData on Layout {
-    privacy
-    geometry
-    hashId
-    parent {
-      hashId
-      __typename
-    }
-    tags {
-      id
-      hashId
-      name
-      __typename
-    }
-    title
-    user {
-      annotationPublic 
-      name
-      hashId
-      pictureUrl
-    __typename
-    }
     revision {
       ...RevisionData
-      __typename
     }
-    __typename
   }
 
   fragment RevisionData on Revision {
-    aboutIntro
-    aboutOutro
-    createdAt
-    hashId
-    hexUrl
-    model
-    title
-    config
-    swatch
     zipUrl
-    qmkVersion
-    qmkUptodate
-    layers {
-      builtIn
-      hashId
-      keys
-      position
-      title
-      color
-      __typename
-    }
-    __typename
   }
 `;
   const { data } = await axios.post(ORYX_GRAPHQL_URL, {
