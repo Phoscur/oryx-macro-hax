@@ -10,7 +10,8 @@ This hack is a post-processor that'll take your raw "Source" Oryx configuration 
 
 Configure in Oryx just as you normally would, except make sure each macro you'd like to extend beyond 4 button presses is a unique set of alphanumeric button presses that act as a unique ID to find in post-processing.  Let's say you want a keyboard to type "whale", you could just write a macro with keys "whal" or get really detailed with numeric IDs and type "1234".  Remember these IDs for later.  DO NOT use any key modifiers, custom delays or non-alphanumeric keys in your extendable macros, you can specify those yourself later.
 
-When done, download the "Source" (don't download the compiled binary), unzip it and note the directory where you unzipped it to.
+When done, download the "Source" (don't download the compiled binary), unzip it and note the directory where you unzipped it to. 
+You can also use `npm run get` to download and unzip after setting up in the next step.
 
 ## 2. Create a mapping in this script
 
@@ -18,8 +19,10 @@ Install on the command line (with Node.js installed) using:
 
 ```
 cd path/to/ergodox-macro-hax
+# by default ~/qmk_firmware/moonlander is recommended
 
 npm install
+npm run get
 ```
 
 Grab my-illicit-macros.ts and change it to what you need, starting with the absolute directory path `SOURCE_DIR` pointed to the unzipped directory that contains the "keymap.c" file (NOT usually in the root directory!) you noted in step 1.  Now open my-illicit-macros.ts and modify to match your configuration.
@@ -39,6 +42,7 @@ Now just map the original 4 character macro to your newer, longer macro.  See wh
 ## 3. Run the post-processor
 
 Run `npm run hax` to modify your config and extend your macros.
+Run `npm run copy` to copy the processed keymap to the parent keymaps folder.
 
 ## 4. Build Modified Source and Flash it!
 
