@@ -6,22 +6,13 @@ const ORYX_GRAPHQL_URL = 'https://oryx.zsa.io/graphql'
 
 export async function getKeymapSourceLink(hashId, revisionId = 'latest') {
   const query = `
-  query getLayout($hashId: String!, $revisionId: String!, $geometry: String) {
-      Layout(hashId: $hashId, geometry: $geometry, revisionId: $revisionId) {
-        ...LayoutData
-      }
-    }
-
-  fragment LayoutData on Layout {
+query getLayout($hashId: String!, $revisionId: String!, $geometry: String) {
+  Layout(hashId: $hashId, geometry: $geometry, revisionId: $revisionId) {
     revision {
-      ...RevisionData
+      zipUrl
     }
   }
-
-  fragment RevisionData on Revision {
-    zipUrl
-  }
-`;
+}`
   const { data } = await axios.post(ORYX_GRAPHQL_URL, {
     operationName: 'getLayout',
     variables: {
