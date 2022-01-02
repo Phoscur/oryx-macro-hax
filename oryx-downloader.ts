@@ -53,5 +53,5 @@ export async function downloadKeymapSource(layoutHashId, path) {
 
 if (typeof require !== 'undefined' && require.main === module) {
   const hashId = process.argv[2] || process.env.LAYOUT_ID || 'PqjlE'
-  downloadKeymapSource(hashId, process.env.LAYOUT_DIR || './test/neophil')
+  downloadKeymapSource(hashId, process.env.LAYOUT_DIR || './layout_src')
 }
