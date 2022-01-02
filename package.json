@@ -7,7 +7,7 @@
     "hax": "ts-node my-illicit-macros.ts",
     "start": "ts-node my-macros.ts",
     "get": "ts-node oryx-downloader.ts",
-    "copy": "cpy ./test/neophil/**/keymap.c ./test/neophil/**/config.h ./test/neophil/**/rules.mk ../keymaps/neophil"
+    "copy": "cpy ./test/neophil/**/keymap.c ./test/neophil/**/config.h ./test/neophil/**/rules.mk ../keymaps/neo"
   },
   "author": "gittyeric",
   "license": "ISC",

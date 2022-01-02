@@ -22,7 +22,7 @@ cd path/to/ergodox-macro-hax
 # by default ~/qmk_firmware/moonlander is recommended
 
 npm install
-npm run get
+npm run get -- <oryxLayoutHashId>
 ```
 
 Grab my-illicit-macros.ts and change it to what you need, starting with the absolute directory path `SOURCE_DIR` pointed to the unzipped directory that contains the "keymap.c" file (NOT usually in the root directory!) you noted in step 1.  Now open my-illicit-macros.ts and modify to match your configuration.
