@@ -1,0 +1,27 @@
+name: Run macro enhancement post-processor
+
+on:
+  workflow_dispatch:
+
+jobs:
+  process_macros:
+    runs-on: ubuntu-latest
+    name: Macro Enhancement
+    env:
+      LAYOUT_ID: ${{ secrets.LAYOUT_ID }} # this is just a secret to be easily reconfigured without a commit
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: Install
+        run: npm install
+      - name: Get ORYX layout
+        run: npm run get
+      - name: Process macros
+        run: npm start
+      
+      #TODO- name: Compile QMK Firmware from source
+        #uses: zsa/qmk
+        #run: qmk_compile

@@ -65,6 +65,9 @@ Use the normal ZSA Wally software to compile and flash.
 
 (TODO currently the keymap is called "neo" by default, make it configurable)
 
+If you want Github to build the firmware for you, create a repository action secret `LAYOUT_ID` and set it to the hashId of your layout keymap.
+(Extract it from your ORYX link: `https://configure.zsa.io/moonlander/layouts/<hashId>/latest/0`) then you can use Github Actions to build the firmware for you.
+
 ## Note: Figuring out key codes
 
 I'm too lazy to list them for you, when I need a keycode such as "X_SPACE", I just put it in a macro and find it in the keymap.c file, then reference that name from then on out.
