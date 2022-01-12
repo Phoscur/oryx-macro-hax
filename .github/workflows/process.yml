@@ -23,5 +23,8 @@ jobs:
       - name: Process macros
         run: npm start
       - name: Compile QMK Firmware from source
-        uses: Phoscur/QMK-compile@main
         #run: qmk compile -kb moonlander -km neo
+        uses: Phoscur/QMK-compile@main
+        with:
+          path: layout_src/moonlander_neophil-autobahn-fueled-wip_source
+        
