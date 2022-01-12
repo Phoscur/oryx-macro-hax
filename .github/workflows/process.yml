@@ -23,5 +23,5 @@ jobs:
       - name: Process macros
         run: npm start
       - name: Compile QMK Firmware from source
-        uses: zsa/qmk_firmware@master
+        uses: Phoscur/QMK-compile@main
         #run: qmk compile -kb moonlander -km neo
