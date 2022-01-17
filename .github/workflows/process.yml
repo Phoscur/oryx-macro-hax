@@ -21,20 +21,22 @@ jobs:
       - name: Get ORYX layout
         run: npm run get
       - name: Process macros
-        run: |
-          npm start
-          mkdir artifacts
+        run: npm start
+      - name: Create artifacts folder
+        run: mkdir ${{ github.workspace }}/artifacts
       - name: Compile QMK Firmware from source
         #run: qmk compile -kb moonlander -km neo
         uses: Phoscur/QMK-compile@main
         with:
           path: layout_src/moonlander_neophil-autobahn-fueled-wip_source
           artifacts_path: ${{ github.workspace }}/artifacts
+      - name: Check artifacts folder
+        run: ls ${{ github.workspace }}/artifacts
       - name: Expose compiled firmware binary as artifact
         uses: actions/upload-artifact@v2
         with:
           name: Firmware Binary
-          path: artifacts/moonlander_neo.bin
+          path: ${{ github.workspace }}/artifacts/moonlander_neo.bin
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
