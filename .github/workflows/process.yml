@@ -27,6 +27,14 @@ jobs:
         uses: Phoscur/QMK-compile@main
         with:
           path: layout_src/moonlander_neophil-autobahn-fueled-wip_source
+        run: |
+          mkdir -p artifacts
+          cp -r .build/* artifacts/*
+      - name: Expose compiled firmware binary as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Firmware Binary
+          path: artifacts/moonlander_neo.bin
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
