@@ -32,8 +32,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Firmware Binary
-          #path: ${{ github.workspace }}/artifacts/moonlander_neo.bin
-          path: /qmk_firmware/.build/moonlander_neo.bin
+          path: ${{ github.workspace }}/artifacts/moonlander_neo.bin
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
