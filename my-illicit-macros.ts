@@ -154,6 +154,11 @@ const macroExtensions = {
         .tapKey("X_LEFT"),
     "numb": newMacro().typeAlphanumeric("number"),
     "stri": newMacro().typeAlphanumeric("string"),
+
+    // Windows shortcuts
+    "winl": newMacro()
+        // Windows Key + L (Lock screen)
+        .withWin(newMacro().tapKey("X_L")),
 }
 
 processAll(macroExtensions, SOURCE_DIR)

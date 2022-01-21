@@ -13,6 +13,8 @@ export interface MacroBuilder {
     withModifiers: (innerMacro: MacroBuilder, rawModifiers: string[]) => MacroBuilder,
 
     withShift: (innerMacro: MacroBuilder) => MacroBuilder,
+    
+    withWin: (innerMacro: MacroBuilder) => MacroBuilder,
 
     build: () => string,
 
@@ -113,7 +115,10 @@ export const newMacro: (expectedReplacementCount?: number) => MacroBuilder = (er
         },
         withShift: (innerMacro: MacroBuilder) => {
             return self.withModifiers(innerMacro, ["SS_LSFT"])
-        },
+        },          
+        withWin: (innerMacro: MacroBuilder) => {
+            return self.withModifiers(innerMacro, ["SS_LWIN"])
+        },      
         build: () => {
             const cmds = commands.map((cmd) => cmd())
             // Trim delays off the ends of commands
