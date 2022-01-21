@@ -1,0 +1,45 @@
+name: "Automated Release: Run ORYX download, macro enhancement post-processor & QMK compiler"
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  process_macros:
+    runs-on: ubuntu-latest
+    name: Macro Enhancement
+    env:
+      LAYOUT_ID: ${{ secrets.LAYOUT_ID }} # this is just a secret to be easily reconfigured without a commit
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: Install
+        run: npm install
+      - name: Get ORYX layout
+        run: npm run get
+      - name: Process macros
+        run: npm start
+      - name: Compile QMK Firmware from source
+        uses: Phoscur/QMK-compile@main
+        with:
+          path: layout_src/${{ secrets.LAYOUT_FOLDER }}
+          artifacts_path: ${{ github.workspace }}/artifacts
+          keymap: custom_macro_enhanced
+          keyboard: moonlander
+      - name: Expose compiled firmware binary as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Firmware Binary
+          # Export keyboard_keymap.bin
+          path: ${{ github.workspace }}/artifacts/moonlander_custom_macro_enhanced.bin
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: artifacts/moonlander_custom_macro_enhanced.bin
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
