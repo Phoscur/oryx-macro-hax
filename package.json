@@ -4,7 +4,10 @@
   "description": "",
   "scripts": {
     "format": "tsfmt -r",
-    "hax": "ts-node my-illicit-macros.ts"
+    "hax": "ts-node my-illicit-macros.ts",
+    "start": "ts-node my-macros.ts",
+    "get": "ts-node oryx-downloader.ts",
+    "copy": "cpy ./layouty_src/**/keymap.c ./layout_src/**/config.h ./layout_src/**/rules.mk ../keymaps/neo"
   },
   "author": "gittyeric",
   "license": "ISC",
@@ -13,12 +16,18 @@
     "@types/jquery": "^3.5.0",
     "@types/node": "^10.17.35",
     "@types/prompts": "^1.2.0",
+    "axios": "^0.24.0",
+    "cpy-cli": "^3.1.1",
     "parse-fraction": "^1.2.1",
     "pluralize": "^7.0.0",
     "prompts": "^2.3.2",
     "ts-node": "^7.0.1",
     "typescript": "^3.9.5",
     "typescript-formatter": "^7.2.2",
-    "typings": "^2.1.1"
+    "typings": "^2.1.1",
+    "unzipper": "^0.10.11"
+  },
+  "devDependencies": {
+    "@types/unzipper": "^0.10.5"
   }
 }
