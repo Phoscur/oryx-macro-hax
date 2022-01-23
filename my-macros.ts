@@ -1,7 +1,8 @@
 import { newMacro, processAll } from "./macros";
 
 // Point this at wherever your config root folder is
-const SOURCE_DIR = "./layout_src/moonlander_neophil-autobahn-fueled-wip_source/keymap.c";
+const LAYOUT = process.env.LAYOUT_FOLDER || 'moonlander_neophumb_source'
+const SOURCE_DIR = `./layout_src/${LAYOUT}/keymap.c`;
 
 const macroExtensions = {
 
