@@ -20,7 +20,7 @@ const macroExtensions = {
 
     "gg": newMacro()
         .tapKey("X_ENTER")
-        .withShift(newMacro().typeAlphanumeric("8gg9")) // ^8 = (, ^9 = )
+        .typeAlphanumeric("(gg)")
         .tapKey("X_ENTER"),
 
     // Git shortcuts
