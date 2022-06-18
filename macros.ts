@@ -90,6 +90,12 @@ export const newMacro: (expectedReplacementCount?: number) => MacroBuilder = (er
                 else if (char === "@") {
                     self.withShift(newMacro().tapKey("X_2"))
                 }
+                else if (char === "(") {
+                    self.withShift(newMacro().tapKey("X_8"))
+                }
+                else if (char === ")") {
+                    self.withShift(newMacro().tapKey("X_9"))
+                }
                 else {
                     throw Error("Unsupported char in typeAlphanumeric: " + char + ", use typeRaw instead?")
                 }
