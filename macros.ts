@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync } from "fs";
 
 export interface MacroBuilder {
+    withModifier(innerMacro: MacroBuilder, modifier?: "ctrl" | "shift"): MacroBuilder;
     delay: (milliseconds: number) => MacroBuilder,
 
     sendRawCmd: (rawCmd: string) => MacroBuilder,
@@ -13,8 +14,13 @@ export interface MacroBuilder {
     withModifiers: (innerMacro: MacroBuilder, rawModifiers: string[]) => MacroBuilder,
 
     withShift: (innerMacro: MacroBuilder) => MacroBuilder,
+
+     withCtrl: (innerMacro: MacroBuilder) => MacroBuilder,
     
     withWin: (innerMacro: MacroBuilder) => MacroBuilder,
+        withAlt: (innerMacro: MacroBuilder) => MacroBuilder,
+        altTab: () => MacroBuilder,
+        click: () => MacroBuilder,
 
     build: () => string,
 
@@ -128,9 +134,33 @@ export const newMacro: (expectedReplacementCount?: number) => MacroBuilder = (er
         withShift: (innerMacro: MacroBuilder) => {
             return self.withModifiers(innerMacro, ["SS_LSFT"])
         },          
+        withCtrl: (innerMacro: MacroBuilder) => {
+            return self.withModifiers(innerMacro, ["SS_LCTL"])
+        },   
         withWin: (innerMacro: MacroBuilder) => {
             return self.withModifiers(innerMacro, ["SS_LWIN"])
         },      
+        withAlt: (innerMacro: MacroBuilder) => {
+            return self.withModifiers(innerMacro, ["SS_LALT"])
+        },
+        withModifier: (innerMacro: MacroBuilder, modifier?: "ctrl" | "shift") => {
+             if (modifier === "ctrl") {
+                return self.withCtrl(innerMacro)
+            }
+            else if (modifier === "shift") {
+                return self.withShift(innerMacro)
+            }
+            else {
+                commands.push(() => innerMacro.build());
+               return self;
+            }
+        },
+        altTab: () => {
+            return self.withAlt(newMacro().tapKey("X_TAB"))
+        },
+        click: () => {
+            return self.tapKey("X_MS_BTN1")
+        },
         build: () => {
             const cmds = commands.map((cmd) => cmd())
             // Trim delays off the ends of commands
@@ -178,7 +208,7 @@ export const processAll = (macroMap: {
 };
 
 function charStrToMacro(keys: string): MacroBuilder {
-    if (keys.length < 1 || keys.length > 4) {
+    if (keys.length < 1 || keys.length > 5) {
         throw new Error("Please check macro ID for " + keys);
     }
     let macro = newMacro()

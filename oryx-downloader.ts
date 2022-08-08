@@ -39,7 +39,7 @@ export async function unzipKeymapSource(url, path) {
 export async function downloadKeymapSource(layoutHashId, path) {
   const zipUrl = await getKeymapSourceLink(layoutHashId)
   await unzipKeymapSource(zipUrl, path)
-  console.log('Downloaded layout', layoutHashId, 'from', zipUrl)
+  console.log('Downloaded layout', layoutHashId, 'from', zipUrl, 'to', path)
 }
 
 if (typeof require !== 'undefined' && require.main === module) {

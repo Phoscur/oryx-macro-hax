@@ -27,19 +27,13 @@ jobs:
         with:
           path: layout_src/${{ secrets.LAYOUT_FOLDER }}
           artifacts_path: ${{ github.workspace }}/artifacts
-          keymap: custom_macro_enhanced
+          keymap: firmware
           keyboard: moonlander
-      - name: Expose compiled firmware binary as artifact
-        uses: actions/upload-artifact@v2
+      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          name: Firmware Binary
-          # Export keyboard_keymap.bin
-          path: ${{ github.workspace }}/artifacts/moonlander_custom_macro_enhanced.bin
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: artifacts/moonlander_custom_macro_enhanced.bin
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          title: "Updated firmware"
+          files: |
+            artifacts/moonlander_firmware.bin
         
