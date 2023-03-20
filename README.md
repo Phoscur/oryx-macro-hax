@@ -10,7 +10,7 @@ This hack is a post-processor that'll take your raw "Source" Oryx configuration 
 
 To compile the firmware, setup the [ZSA QMK Fork with guide referenced](https://github.com/zsa/qmk_firmware)
 
-`qmk setup zsa/qmk_firmware -b firmware20`
+`qmk setup zsa/qmk_firmware -b firmware21`
 
 Install on the command line (with Node.js installed) using:
 ```
@@ -54,14 +54,24 @@ Now just map the original 4 character macro to your newer, longer macro.  See wh
 
 ## 3. Run the post-processor
 
-Run `npm run hax` to modify your config and extend your macros.
-Run `npm run copy` to copy the processed keymap to the parent keymaps folder (keymaps/neo).
+Run to modify your config and extend your macros. By default layoutFolderName is 'moonlander_default-layout_source'
+
+```
+cd ~/qmk_firmware/ergodox-macro-hax
+npm run hax -- <layoutFolderName>
+```
+
+Run `npm run copy` to copy the processed keymap to the parent keymaps folder (../keyboards/moonlander/keymaps/hacked).
 
 ## 4. Build Modified Source and Flash it!
 
 Use the normal QMK/ZSA Wally software to compile and flash.
 
-`qmk compile -kb moonlander -km neo`
+`npm run compile`
+or
+`qmk compile -kb moonlander -km hacked`
+
+Flash.... TBD
 
 If you want Github to build the firmware for you, create repository action secrets `LAYOUT_ID`, set it to the hashId of your layout keymap, as well as `LAYOUT_FOLDER` with the name of the folder of your keymap in the source archive.
 (Extract it from your ORYX link: `https://configure.zsa.io/moonlander/layouts/<hashId>/latest/0`) then you can use [Github Actions](./.github/workflows/process.yml) to build the firmware for you.

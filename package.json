@@ -4,10 +4,10 @@
   "description": "",
   "scripts": {
     "format": "tsfmt -r",
-    "hax": "ts-node my-illicit-macros.ts",
-    "start": "ts-node my-macros.ts",
-    "get": "ts-node oryx-downloader.ts",
-    "copy": "cpy ./layouty_src/**/keymap.c ./layout_src/**/config.h ./layout_src/**/rules.mk ../keymaps/neo"
+    "hax": "dotenv cross-var ts-node my-macros.ts",
+    "get": "dotenv cross-var ts-node oryx-downloader.ts",
+    "copy": "cpy ./layout_src/**/keymap.c ./layout_src/**/config.h ./layout_src/**/rules.mk ../keyboards/moonlander/keymaps/hacked",
+    "compile": "cd .. && qmk compile -kb moonlander -km hacked"
   },
   "author": "gittyeric",
   "license": "ISC",
@@ -25,7 +25,9 @@
     "typescript": "^3.9.5",
     "typescript-formatter": "^7.2.2",
     "typings": "^2.1.1",
-    "unzipper": "^0.10.11"
+    "unzipper": "^0.10.11",
+    "cross-var": "1.1.0",
+    "dotenv-cli": "3.0.0"
   },
   "devDependencies": {
     "@types/unzipper": "^0.10.5"
