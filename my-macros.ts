@@ -163,6 +163,16 @@ const macroExtensions = {
         .tapKey("X_ENTER")
         .typeAlphanumeric("(gg)")
         .tapKey("X_ENTER"),
+    "dance_SINGLETAP_A": newMacro()
+        .typeAlphanumeric("git status"),
+    "dance_SINGLEHOLD_A": newMacro()
+        .typeAlphanumeric("git log"),
+    "dance_DOUBLETAP_A": newMacro()
+        .typeAlphanumeric("ls -al"),
+    "dance_DOUBLEHOLD_A": newMacro()
+        .typeAlphanumeric("cp ../moonlander_hacked.bin /mnt/c/tools/"),
+    //        case SINGLE_TAP: SEND_STRING("{}"); register_code(KC_LEFT); unregister_code(KC_LEFT); break;
+
     "bd": executeMacro([[bd()]]),
     "dw": executeMacro([[dw()]]),
     "carom": executeMacro([
@@ -232,4 +242,11 @@ const macroExtensions = {
         .altTab()
 }
 
-processAll(macroExtensions, SOURCE_DIR)
+
+if (typeof require !== 'undefined' && require.main === module) {
+    const layoutFolder = process.argv[2] || process.env.LAYOUT_FOLDER
+    const sourceDir = `./layout_src/${layoutFolder}/keymap.c`;
+    console.log("Keymap Source: " + sourceDir)
+
+    processAll(macroExtensions, sourceDir)
+}

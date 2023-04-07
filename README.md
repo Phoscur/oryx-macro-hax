@@ -34,11 +34,10 @@ It is also recommended to `git branch <your layout name>` and gitignore allowlis
 
 ```
 cd ~/qmk_firmware/ergodox-macro-hax
-
 npm run get -- <oryxLayoutHashId>
 ```
 
-Grab my-illicit-macros.ts and change it to what you need, starting with the absolute directory path `SOURCE_DIR` pointed to the unzipped directory that contains the "keymap.c" file (NOT usually in the root directory!) you noted in step 1.  Now open my-illicit-macros.ts and modify to match your configuration.
+Grab macros.ts or example and change it to what you need
 
 Here's an example of creating an extended (more than 4 button) macro:
 
@@ -50,7 +49,25 @@ const macro = newMacro()
     .delay(50) // Delay for 50 ms
 ```
 
-Now just map the original 4 character macro to your newer, longer macro.  See what's already in my-illicit-macros.ts for fuller examples.
+Now just map the original 4 character macro to your newer, longer macro.  See what's already in my-macros.ts for fuller examples.
+
+If you want to run a macro on a double tap or other state, the UI does not let you do this. To add a macro to a dance program the states with a letter. For example on my 2nd layer I have mapped the G key on the board to be A when tapped, held, double tapped and then tapped and held. The following macros will replace the letter A in the dance section with the macro you want. If you have more than the 26 letters you are getting too complex :)
+
+The name of the macro tells the system what to replace. always start with 'dance_' then type of tap and finally letter as per the example below.
+
+```
+    "dance_SINGLETAP_A": newMacro()
+        .typeAlphanumeric("git status"),
+    "dance_SINGLEHOLD_A": newMacro()
+        .typeAlphanumeric("git log"),
+    "dance_DOUBLETAP_A": newMacro()
+        .typeAlphanumeric("ls -al"),
+    "dance_DOUBLEHOLD_A": newMacro()
+        .typeAlphanumeric("cp ../moonlander_hacked.bin /mnt/c/tools/"),
+
+```
+
+
 
 ## 3. Run the post-processor
 

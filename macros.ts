@@ -1,7 +1,6 @@
 import { readFileSync, writeFileSync } from "fs";
 
 export interface MacroBuilder {
-    withModifier(innerMacro: MacroBuilder, modifier?: "ctrl" | "shift"): MacroBuilder;
     delay: (milliseconds: number) => MacroBuilder,
 
     sendRawCmd: (rawCmd: string) => MacroBuilder,
@@ -11,16 +10,21 @@ export interface MacroBuilder {
 
     tapKey: (rawKey: string, msDelayAfter?: number) => MacroBuilder,
 
+    withModifier(innerMacro: MacroBuilder, modifier?: "ctrl" | "shift"): MacroBuilder;
+
     withModifiers: (innerMacro: MacroBuilder, rawModifiers: string[]) => MacroBuilder,
 
     withShift: (innerMacro: MacroBuilder) => MacroBuilder,
 
-     withCtrl: (innerMacro: MacroBuilder) => MacroBuilder,
-    
+    withCtrl: (innerMacro: MacroBuilder) => MacroBuilder,
+
     withWin: (innerMacro: MacroBuilder) => MacroBuilder,
-        withAlt: (innerMacro: MacroBuilder) => MacroBuilder,
-        altTab: () => MacroBuilder,
-        click: () => MacroBuilder,
+
+    withAlt: (innerMacro: MacroBuilder) => MacroBuilder,
+
+    altTab: () => MacroBuilder,
+
+    click: () => MacroBuilder,
 
     build: () => string,
 
@@ -42,6 +46,7 @@ export const newMacro: (expectedReplacementCount?: number) => MacroBuilder = (er
             return self;
         },
         // Works with a-z, 0-9, space and newline-as-enter
+        // https://github.com/qmk/qmk_firmware/blob/master/quantum/send_string/send_string_keycodes.h
         typeAlphanumeric: (strToType: string, msDelayBetweenStrokes: number = 30) => {
             for (let i = 0; i < strToType.length; i++) {
                 const char = strToType[i]
@@ -90,6 +95,9 @@ export const newMacro: (expectedReplacementCount?: number) => MacroBuilder = (er
                 else if (char === '"') {
                     self.withShift(newMacro().tapKey("X_QUOTE"))
                 }
+                else if (char === '_') {
+                    self.withShift(newMacro().tapKey("X_MINUS"))
+                }
                 else if (char === "!") {
                     self.withShift(newMacro().tapKey("X_1"))
                 }
@@ -120,6 +128,18 @@ export const newMacro: (expectedReplacementCount?: number) => MacroBuilder = (er
             commands.push(() => rawCmd)
             return self
         },
+        withModifier: (innerMacro: MacroBuilder, modifier?: "ctrl" | "shift") => {
+            if (modifier === "ctrl") {
+                return self.withCtrl(innerMacro)
+            }
+            else if (modifier === "shift") {
+                return self.withShift(innerMacro)
+            }
+            else {
+                commands.push(() => innerMacro.build());
+                return self;
+            }
+        },
         // Runs some inner macro while holding down all
         // modifier keys
         withModifiers: (
@@ -133,27 +153,15 @@ export const newMacro: (expectedReplacementCount?: number) => MacroBuilder = (er
         },
         withShift: (innerMacro: MacroBuilder) => {
             return self.withModifiers(innerMacro, ["SS_LSFT"])
-        },          
+        },
         withCtrl: (innerMacro: MacroBuilder) => {
             return self.withModifiers(innerMacro, ["SS_LCTL"])
-        },   
+        },
         withWin: (innerMacro: MacroBuilder) => {
             return self.withModifiers(innerMacro, ["SS_LWIN"])
-        },      
+        },
         withAlt: (innerMacro: MacroBuilder) => {
             return self.withModifiers(innerMacro, ["SS_LALT"])
-        },
-        withModifier: (innerMacro: MacroBuilder, modifier?: "ctrl" | "shift") => {
-             if (modifier === "ctrl") {
-                return self.withCtrl(innerMacro)
-            }
-            else if (modifier === "shift") {
-                return self.withShift(innerMacro)
-            }
-            else {
-                commands.push(() => innerMacro.build());
-               return self;
-            }
         },
         altTab: () => {
             return self.withAlt(newMacro().tapKey("X_TAB"))
@@ -174,18 +182,49 @@ export const newMacro: (expectedReplacementCount?: number) => MacroBuilder = (er
     return self;
 }
 
+// Refactor if ever really touching again.
 export const processAll = (macroMap: {
     [originalMacroKeys: string]: MacroBuilder
 }, keymapFile: string) => {
     const loaded = readFileSync(keymapFile).toString()
     const orig = Object.keys(macroMap)
     orig.forEach((macroKeys) => {
-        const toFind = "SEND_STRING(" + charStrToMacro(macroKeys).build() + ")"
-        const newMacro = macroMap[macroKeys]
-        const matchCount = loaded.split(toFind).length - 1
-        if (matchCount !== newMacro.expectedReplacements) {
-            console.error(toFind)
-            throw new Error(`Found ${matchCount} instances of the ${macroKeys} macro but expected ${newMacro.expectedReplacements} instances!  Check your config and set the proper value in newMacro()`)
+
+        if (macroKeys.startsWith('dance_')) {
+            const step = macroKeys.split("_")[1]
+            console.log(step)
+            let caseStep = "";
+
+            if (step === "SINGLETAP") {
+                caseStep = "SINGLE_TAP"
+            } else if (step === "SINGLEHOLD") {
+                caseStep = "SINGLE_HOLD"
+            } else if (step === "DOUBLETAP") {
+                caseStep = "DOUBLE_TAP"
+            } else if (step === "DOUBLEHOLD") {
+                caseStep = "DOUBLE_HOLD"
+            }
+
+            const toFind = "case " + caseStep + ": register_code16(KC_" + macroKeys.split("_")[2] + "); break;"
+
+            console.log("Finding:" + toFind)
+
+            const newMacro = macroMap[macroKeys]
+            const matchCount = loaded.split(toFind).length - 1
+            if (matchCount !== newMacro.expectedReplacements) {
+                console.error(toFind)
+                throw new Error(`Found ${matchCount} instances of the ${macroKeys} macro but expected ${newMacro.expectedReplacements} instances!  Check your config and set the proper value in newMacro()`)
+            }
+
+        } else {
+
+            const toFind = "SEND_STRING(" + charStrToMacro(macroKeys).build() + ")"
+            const newMacro = macroMap[macroKeys]
+            const matchCount = loaded.split(toFind).length - 1
+            if (matchCount !== newMacro.expectedReplacements) {
+                console.error(toFind)
+                throw new Error(`Found ${matchCount} instances of the ${macroKeys} macro but expected ${newMacro.expectedReplacements} instances!  Check your config and set the proper value in newMacro()`)
+            }
         }
     })
 
@@ -195,12 +234,44 @@ export const processAll = (macroMap: {
 
     let newConfig = `${loaded}`
     orig.forEach((macroKeys) => {
-        const toFind = "SEND_STRING(" + charStrToMacro(macroKeys).build() + ")"
-        const newMacro = macroMap[macroKeys]
-        const macro = "SEND_STRING(" + newMacro.build() + ")"
-        for (let i = 0; i < newMacro.expectedReplacements; i++) {
-            console.log("Replacing \n" + toFind + "\nwith\n" + macro)
-            newConfig = newConfig.replace(toFind, macro)
+        if (macroKeys.startsWith('dance_')) {
+            const step = macroKeys.split("_")[1]
+            const newMacro = macroMap[macroKeys]
+            const macro = "SEND_STRING(" + newMacro.build() + ")"
+            let caseStep = "";
+
+            if (step === "SINGLETAP") {
+                caseStep = "SINGLE_TAP"
+            } else if (step === "SINGLEHOLD") {
+                caseStep = "SINGLE_HOLD"
+            } else if (step === "DOUBLETAP") {
+                caseStep = "DOUBLE_TAP"
+            } else if (step === "DOUBLEHOLD") {
+                caseStep = "DOUBLE_HOLD"
+            }
+
+            const toFind = "case " + caseStep + ": register_code16(KC_" + macroKeys.split("_")[2] + "); break;"
+            const replacement = "case " + caseStep + ": " + macro + "; break;"
+            const toFindReset = "case " + caseStep + ": unregister_code16(KC_" + macroKeys.split("_")[2] + "); break;"
+            const replacementReset = "case " + caseStep + ": break;"
+
+
+            for (let i = 0; i < newMacro.expectedReplacements; i++) {
+                console.log("Replacing \n" + toFind + "\nwith\n" + replacement)
+                newConfig = newConfig.replace(toFind, replacement)
+
+                console.log("Replacing \n" + toFindReset + "\nwith\n" + replacementReset)
+                newConfig = newConfig.replace(toFindReset, replacementReset)
+            }
+
+        } else {
+            const toFind = "SEND_STRING(" + charStrToMacro(macroKeys).build() + ")"
+            const newMacro = macroMap[macroKeys]
+            const macro = "SEND_STRING(" + newMacro.build() + ")"
+            for (let i = 0; i < newMacro.expectedReplacements; i++) {
+                console.log("Replacing \n" + toFind + "\nwith\n" + macro)
+                newConfig = newConfig.replace(toFind, macro)
+            }
         }
     })
     writeFileSync(keymapFile, newConfig)
@@ -208,7 +279,7 @@ export const processAll = (macroMap: {
 };
 
 function charStrToMacro(keys: string): MacroBuilder {
-    if (keys.length < 1 || keys.length > 5) {
+    if (keys.length < 1 || keys.length > 4) {
         throw new Error("Please check macro ID for " + keys);
     }
     let macro = newMacro()
