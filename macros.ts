@@ -279,7 +279,7 @@ export const processAll = (macroMap: {
 };
 
 function charStrToMacro(keys: string): MacroBuilder {
-    if (keys.length < 1 || keys.length > 4) {
+    if (keys.length < 1 || keys.length > 5) {
         throw new Error("Please check macro ID for " + keys);
     }
     let macro = newMacro()
