@@ -26,8 +26,9 @@ npm install
 Configure in Oryx just as you normally would, except make sure each macro you'd like to extend beyond 4 button presses is a unique set of alphanumeric button presses that act as a unique ID to find in post-processing.  Let's say you want a keyboard to type "whale", you could just write a macro with keys "whal" or get really detailed with numeric IDs and type "1234".  Remember these IDs for later.  DO NOT use any key modifiers, custom delays or non-alphanumeric keys in your extendable macros, you can specify those yourself later.
 
 When done, take a note of the `layout hash ID` in the URL or download the source manually into the `keymap_src` folder.
+Copy `.env.dist` and creating a `.env` file with your configuration.
 
-It is also recommended to `git branch <your layout name>` and gitignore allowlist `!layout_src/<your layout name>`.
+It is also recommended to `git branch <your layout name>` and gitignore allowlist `!layout_src/<your layout name>` (don't merge this branch into your main branch).
 
 ## 2. Create a mapping in this script
 

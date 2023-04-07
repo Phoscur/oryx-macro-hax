@@ -1,4 +1,4 @@
 node_modules
 test
 layout_src
-!layout_src/pJAXv
+.env
