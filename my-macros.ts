@@ -163,7 +163,7 @@ const macroExtensions = {
         .tapKey("X_ENTER")
         .typeAlphanumeric("(gg)")
         .tapKey("X_ENTER"),
-    "dance_SINGLETAP_A": newMacro()
+    /*"dance_SINGLETAP_A": newMacro()
         .typeAlphanumeric("git status"),
     "dance_SINGLEHOLD_A": newMacro()
         .typeAlphanumeric("git log"),
@@ -239,7 +239,7 @@ const macroExtensions = {
         .delay(600)
         .click()
         .delay(200)
-        .altTab()
+        .altTab()*/
 }
 
 
