@@ -9,7 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Macro Enhancement
     env:
-      LAYOUT_ID: ${{ secrets.LAYOUT_ID }} # this is just a secret to be easily reconfigured without a commit
+      LAYOUT_ID: ${{ vars.LAYOUT_ID }}
+      LAYOUT_FOLDER: ${{ vars.LAYOUT_FOLDER }}
     steps:
       - uses: actions/checkout@v1
       - name: Use Node.js
@@ -25,7 +26,7 @@ jobs:
       - name: Compile QMK Firmware from source
         uses: Phoscur/QMK-compile@main
         with:
-          path: layout_src/${{ secrets.LAYOUT_FOLDER }}
+          path: layout_src/${{ vars.LAYOUT_FOLDER }}
           artifacts_path: ${{ github.workspace }}/artifacts
           keymap: firmware
           keyboard: moonlander

@@ -43,6 +43,7 @@ export async function downloadKeymapSource(layoutHashId, path) {
 }
 
 if (typeof require !== 'undefined' && require.main === module) {
-  const hashId = process.argv[2] || process.env.LAYOUT_ID 
-  downloadKeymapSource(hashId, process.env.LAYOUT_DIR )
+  const hashId = process.argv[2] || process.env.LAYOUT_ID;
+  const folder = process.argv[3] || process.env.LAYOUT_DIR;
+  downloadKeymapSource(hashId, folder);
 }
