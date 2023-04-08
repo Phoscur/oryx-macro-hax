@@ -1,6 +1,6 @@
 # Ergodox Macro Hax
 
-This is a quick and dirty script to nicely get around the annoying (though reasonable) limitation of Ergodox / Moonlander keyboards in the Oryx configurator where macros can only be 4 key sequences for security reasons.
+This is a quick and dirty script to nicely get around the annoying (though reasonable) limitation of Ergodox / Moonlander keyboards in the Oryx configurator where macros can only be five key sequences for security reasons.
 
 This hack is a post-processor that'll take your raw "Source" Oryx configuration and extend your macros to be any arbitrary sequence.
 
@@ -8,7 +8,9 @@ This hack is a post-processor that'll take your raw "Source" Oryx configuration 
 
 ## 0. Initial setup
 
-To compile the firmware, setup the [ZSA QMK Fork with guide referenced](https://github.com/zsa/qmk_firmware)
+_If you are willing to wait (ca. 3mins) on [Github Actions ](./.github/workflows/process.yml) to compile your firmware after pushing, you could skip installing QMK on your local machine!_
+
+To compile the firmware on your machine, setup the [ZSA QMK Fork with guide referenced](https://github.com/zsa/qmk_firmware)
 
 `qmk setup zsa/qmk_firmware -b firmware22`
 
@@ -23,24 +25,23 @@ npm install
 
 ## 1. Configuring with Oryx
 
-Configure in Oryx just as you normally would, except make sure each macro you'd like to extend beyond 4 button presses is a unique set of alphanumeric button presses that act as a unique ID to find in post-processing.  Let's say you want a keyboard to type "whale", you could just write a macro with keys "whal" or get really detailed with numeric IDs and type "1234".  Remember these IDs for later.  DO NOT use any key modifiers, custom delays or non-alphanumeric keys in your extendable macros, you can specify those yourself later.
+Configure in Oryx just as you normally would, except make sure each macro you'd like to extend beyond five button presses is a unique set of alphanumeric button presses that act as a unique ID to find in post-processing.  Let's say you want a keyboard to type "potato", you could just write a macro with keys "potat" or get really detailed with numeric IDs and type "ph123".  Remember these IDs for later.  DO NOT use any key modifiers, custom delays or non-alphanumeric keys in your extendable macros, you can specify those yourself later.
 
-When done, take a note of the `layout hash ID` in the URL or download the source manually into the `keymap_src` folder.
-Copy `.env.dist` and creating a `.env` file with your configuration.
+When done, take a note of the `layout hash ID` in the URL or download the source manually into the `layout_src` folder (`npm run get -- <oryxLayoutHashId>`).
 
-It is also recommended to `git branch <your layout name>` and gitignore allowlist `!layout_src/<your layout name>` (don't merge this branch into your main branch).
+Copy `.env.dist` creating a `.env` file with your configuration, create [Github Action variables](https://github.com/Phoscur/oryx-macro-hax/settings/variables/actions):
+- `LAYOUT_ID`: hashId of your layout keymap
+- `LAYOUT_FOLDER`:  name of the folder of your keymap in the source archive
+
+
+It is also recommended to `git branch <your layout name>` and gitignore allowlist `!layout_src/<your layout name>` , if you want to track the C source of your keymap (don't merge this branch into your main branch!).
 
 ## 2. Create a mapping in this script
 
 
-```
-cd ~/qmk_firmware/ergodox-macro-hax
-npm run get -- <oryxLayoutHashId>
-```
-
 Grab macros.ts or example and change it to what you need
 
-Here's an example of creating an extended (more than 4 button) macro:
+Here's an example of creating an extended (more than five character) macro:
 
 ```
 const macro = newMacro()
@@ -50,7 +51,7 @@ const macro = newMacro()
     .delay(50) // Delay for 50 ms
 ```
 
-Now just map the original 4 character macro to your newer, longer macro.  See what's already in my-macros.ts for fuller examples.
+Now just map the original five character macro to your newer, longer macro. See what's already in my-macros.ts for more complete examples.
 
 If you want to run a macro on a double tap or other state, the UI does not let you do this. To add a macro to a dance program the states with a letter. For example on my 2nd layer I have mapped the G key on the board to be A when tapped, held, double tapped and then tapped and held. The following macros will replace the letter A in the dance section with the macro you want. If you have more than the 26 letters you are getting too complex :)
 
@@ -83,16 +84,16 @@ Run `npm run copy` to copy the processed keymap to the parent keymaps folder (..
 
 ## 4. Build Modified Source and Flash it!
 
+_Push and wait for Github Actions... or_
+
 Use the normal QMK/ZSA Wally software to compile and flash.
 
 `npm run compile`
 or
 `qmk compile -kb moonlander -km hacked`
 
-Flash.... TBD
-
-If you want Github to build the firmware for you, create repository action secrets `LAYOUT_ID`, set it to the hashId of your layout keymap, as well as `LAYOUT_FOLDER` with the name of the folder of your keymap in the source archive.
-(Extract it from your ORYX link: `https://configure.zsa.io/moonlander/layouts/<hashId>/latest/0`) then you can use [Github Actions](./.github/workflows/process.yml) to build the firmware for you.
+Flash ...
+Test, extend & reiterate!
 
 ## Note: Figuring out key codes
 
