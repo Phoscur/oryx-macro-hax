@@ -10,7 +10,7 @@ This hack is a post-processor that'll take your raw "Source" Oryx configuration 
 
 To compile the firmware, setup the [ZSA QMK Fork with guide referenced](https://github.com/zsa/qmk_firmware)
 
-`qmk setup zsa/qmk_firmware -b firmware21`
+`qmk setup zsa/qmk_firmware -b firmware22`
 
 Install on the command line (with Node.js installed) using:
 ```
