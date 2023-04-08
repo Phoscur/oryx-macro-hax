@@ -1,29 +1,38 @@
 import { newMacro, processAll } from "./macros";
 
 // Point this at wherever your config root folder is
-const SOURCE_DIR = "./test/moonlander_vimmy_source/keymap.c";
+const SOURCE_DIR = "./layout_src/moonlander_neophil-autobahn-fueled-wip_source/keymap.c";
 
 const macroExtensions = {
 
     // Application quick launches
     /*"fire": newMacro()
         .tapKey("X_LGUI", 100)
-        .typeAlphanumeric("firefox\n"),
-    "vsco": newMacro()
+        .typeAlphanumeric("firefox\n"),*/
+    "dev": newMacro()
         .tapKey("X_LGUI", 100)
-        .typeAlphanumeric("visual studio c\n"),*/
+        .typeAlphanumeric("visual studio c\n"),
+
+    "poke": newMacro()
+        .withShift(newMacro().typeAlphanumeric("1")) // ^1 = !
+        .typeAlphanumeric("pokecatch "),
+
+    "gg": newMacro()
+        .tapKey("X_ENTER")
+        .withShift(newMacro().typeAlphanumeric("8gg9")) // ^8 = (, ^9 = )
+        .tapKey("X_ENTER"),
 
     // Git shortcuts
-    "add": newMacro(0)
+    /*"add": newMacro(0)
         .typeAlphanumeric("git add -A"),
     "comm": newMacro(1)
         .typeAlphanumeric("git commit -m \"\"")
         .tapKey("X_LEFT"),
     "push": newMacro(1)
         .typeAlphanumeric("git push"),
-
+    //*/
     // Macros for Typescript mode, type full keywords beyond 4 characters
-    "cons": newMacro()
+    /*"cons": newMacro()
         .typeAlphanumeric("const "),
     "retu": newMacro()
         .typeAlphanumeric("return "),
@@ -154,11 +163,7 @@ const macroExtensions = {
         .tapKey("X_LEFT"),
     "numb": newMacro().typeAlphanumeric("number"),
     "stri": newMacro().typeAlphanumeric("string"),
-
-    // Windows shortcuts
-    "winl": newMacro()
-        // Windows Key + L (Lock screen)
-        .withWin(newMacro().tapKey("X_L")),
+    //*/
 }
 
 processAll(macroExtensions, SOURCE_DIR)

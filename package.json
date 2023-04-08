@@ -1,33 +1,40 @@
 {
   "name": "ergodox-macro-hax",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "scripts": {
-    "format": "tsfmt -r",
-    "hax": "ts-node my-illicit-macros.ts",
     "start": "ts-node my-macros.ts",
-    "get": "ts-node oryx-downloader.ts",
-    "copy": "cpy ./layouty_src/**/keymap.c ./layout_src/**/config.h ./layout_src/**/rules.mk ../keymaps/neo"
+    "format": "tsfmt -r",
+    "hax": "dotenv cross-var ts-node my-macros.ts",
+    "get": "dotenv cross-var ts-node oryx-downloader.ts",
+    "copy": "cpy ./layout_src/**/keymap.c ./layout_src/**/config.h ./layout_src/**/rules.mk ../keyboards/moonlander/keymaps/hacked",
+    "compile": "cd .. && qmk compile -kb moonlander -km hacked"
   },
   "author": "gittyeric",
   "license": "ISC",
   "dependencies": {
-    "@types/es6-promise": "^3.3.0",
-    "@types/jquery": "^3.5.0",
-    "@types/node": "^10.17.35",
-    "@types/prompts": "^1.2.0",
     "axios": "^0.24.0",
     "cpy-cli": "^3.1.1",
+    "cross-var": "1.1.0",
+    "dotenv-cli": "3.0.0",
     "parse-fraction": "^1.2.1",
     "pluralize": "^7.0.0",
-    "prompts": "^2.3.2",
+    "prompts": "^2.4.2",
     "ts-node": "^7.0.1",
-    "typescript": "^3.9.5",
+    "typescript": "^3.9.10",
     "typescript-formatter": "^7.2.2",
     "typings": "^2.1.1",
     "unzipper": "^0.10.11"
   },
+  "resolutions": {
+    "json5": "1.0.2"
+  },
   "devDependencies": {
-    "@types/unzipper": "^0.10.5"
+    "@types/es6-promise": "^3.3.0",
+    "@types/jquery": "^3.5.16",
+    "@types/node": "^10.17.60",
+    "@types/prompts": "^1.2.0",
+    "@types/unzipper": "^0.10.5",
+    "jest": "^29.5.0"
   }
 }
