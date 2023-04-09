@@ -25,9 +25,10 @@ export function process(keymapC: string, macroMap: {
     const newMacro = macroMap[macroKeys];
     const matchCount = keymapC.split(toFind).length - 1;
     if (matchCount !== newMacro.expectedReplacements) {
-      console.error(toFind);
       throw new Error(
-        `Found ${matchCount} instances of the ${macroKeys} macro but expected ${newMacro.expectedReplacements} instances!  Check your config and set the proper value in newMacro()`
+        `Found ${matchCount} instances of the "${macroKeys}" macro but expected ${newMacro.expectedReplacements} instances!
+         - Check your config and set the proper value in newMacro()
+         Macro code: ${toFind}`
       );
     }
     return matchCount;
