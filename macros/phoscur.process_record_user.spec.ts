@@ -1,9 +1,11 @@
 import { describe, it, expect } from '@jest/globals';
+import { newMacro, process } from '../src/macros';
+import { prepare } from './phoscur';
 
 describe('Process layout file keymap.c: process_record_user function', () => {
-  it('should expand macros inside C-code', () => {
-    // TODO seperate out file access
-    expect(KEYMAPC).toMatch(KEYMAPC_ENHANCED);
+  it('should expand all macros inside C-code', () => {
+    const userConfig = prepare(newMacro);
+    expect(process(KEYMAPC, userConfig.macroExtensions)).toMatch(KEYMAPC_ENHANCED);
   });
 });
 
