@@ -1,4 +1,3 @@
-import { readFileSync, writeFileSync } from "fs";
 
 export interface MacroBuilder {
     delay: (milliseconds: number) => MacroBuilder,
@@ -182,7 +181,7 @@ export const newMacro: (expectedReplacementCount?: number) => MacroBuilder = (er
     return self;
 }
 
-function charStrToMacro(keys: string): MacroBuilder {
+export function charStrToMacro(keys: string): MacroBuilder {
     if (keys.length < 1 || keys.length > 5) {
         throw new Error("Please check macro ID for " + keys);
     }
@@ -196,99 +195,4 @@ function charStrToMacro(keys: string): MacroBuilder {
     return macro;
 }
 
-// Please Refactor, make it shorter, simpler
-export const processAll = (macroMap: {
-    [originalMacroKeys: string]: MacroBuilder
-}, keymapFile: string) => {
-    const loaded = readFileSync(keymapFile).toString()
-    const orig = Object.keys(macroMap)
-    orig.forEach((macroKeys) => {
-
-        if (macroKeys.startsWith('dance_')) {
-            const step = macroKeys.split("_")[1]
-            console.log(step)
-            let caseStep = "";
-
-            if (step === "SINGLETAP") {
-                caseStep = "SINGLE_TAP"
-            } else if (step === "SINGLEHOLD") {
-                caseStep = "SINGLE_HOLD"
-            } else if (step === "DOUBLETAP") {
-                caseStep = "DOUBLE_TAP"
-            } else if (step === "DOUBLEHOLD") {
-                caseStep = "DOUBLE_HOLD"
-            }
-
-            const toFind = "case " + caseStep + ": register_code16(KC_" + macroKeys.split("_")[2] + "); break;"
-
-            console.log("Finding:" + toFind)
-
-            const newMacro = macroMap[macroKeys]
-            const matchCount = loaded.split(toFind).length - 1
-            if (matchCount !== newMacro.expectedReplacements) {
-                console.error(toFind)
-                throw new Error(`Found ${matchCount} instances of the ${macroKeys} macro but expected ${newMacro.expectedReplacements} instances!  Check your config and set the proper value in newMacro()`)
-            }
-
-        } else {
-
-            const toFind = "SEND_STRING(" + charStrToMacro(macroKeys).build() + ")"
-            const newMacro = macroMap[macroKeys]
-            const matchCount = loaded.split(toFind).length - 1
-            if (matchCount !== newMacro.expectedReplacements) {
-                console.error(toFind)
-                throw new Error(`Found ${matchCount} instances of the ${macroKeys} macro but expected ${newMacro.expectedReplacements} instances!  Check your config and set the proper value in newMacro()`)
-            }
-        }
-    })
-
-    const backup = keymapFile + Math.random() + ".old-"
-    console.log("Backed up keymap.c to " + backup)
-    writeFileSync(backup, loaded)
-
-    let newConfig = `${loaded}`
-    orig.forEach((macroKeys) => {
-        if (macroKeys.startsWith('dance_')) {
-            const step = macroKeys.split("_")[1]
-            const newMacro = macroMap[macroKeys]
-            const macro = "SEND_STRING(" + newMacro.build() + ")"
-            let caseStep = "";
-
-            if (step === "SINGLETAP") {
-                caseStep = "SINGLE_TAP"
-            } else if (step === "SINGLEHOLD") {
-                caseStep = "SINGLE_HOLD"
-            } else if (step === "DOUBLETAP") {
-                caseStep = "DOUBLE_TAP"
-            } else if (step === "DOUBLEHOLD") {
-                caseStep = "DOUBLE_HOLD"
-            }
-
-            const toFind = "case " + caseStep + ": register_code16(KC_" + macroKeys.split("_")[2] + "); break;"
-            const replacement = "case " + caseStep + ": " + macro + "; break;"
-            const toFindReset = "case " + caseStep + ": unregister_code16(KC_" + macroKeys.split("_")[2] + "); break;"
-            const replacementReset = "case " + caseStep + ": break;"
-
-
-            for (let i = 0; i < newMacro.expectedReplacements; i++) {
-                console.log("Replacing \n" + toFind + "\nwith\n" + replacement)
-                newConfig = newConfig.replace(toFind, replacement)
-
-                console.log("Replacing \n" + toFindReset + "\nwith\n" + replacementReset)
-                newConfig = newConfig.replace(toFindReset, replacementReset)
-            }
-
-        } else {
-            const toFind = "SEND_STRING(" + charStrToMacro(macroKeys).build() + ")"
-            const newMacro = macroMap[macroKeys]
-            const macro = "SEND_STRING(" + newMacro.build() + ")"
-            for (let i = 0; i < newMacro.expectedReplacements; i++) {
-                console.log("Replacing \n" + toFind + "\nwith\n" + macro)
-                newConfig = newConfig.replace(toFind, macro)
-            }
-        }
-    })
-    writeFileSync(keymapFile, newConfig)
-    console.log("ALL done! Proceed with compilation and flashing")
-};
 

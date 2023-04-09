@@ -1,5 +1,5 @@
 import { describe, it, expect } from '@jest/globals';
-import { newMacro } from '../src/macros';
+import { newMacro } from '../src/MacroBuilder';
 import { process } from '../src/process';
 import { prepare } from './phoscur';
 

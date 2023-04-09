@@ -1,4 +1,5 @@
-import { newMacro, processAll } from "./macros";
+import { newMacro } from "./MacroBuilder";
+import { processAll } from "./processAll";
 
 const MACROS_DIR = "../macros/";
 const {

@@ -1,18 +1,4 @@
-import { MacroBuilder, newMacro } from "./macros";
-
-function charStrToMacro(keys: string): MacroBuilder {
-  if (keys.length < 1 || keys.length > 5) {
-    throw new Error("Please check macro ID for " + keys);
-  }
-  let macro = newMacro();
-  for (let i = 0; i < keys.length; i++) {
-    macro = macro.tapKey(`X_${keys[i].toUpperCase()}`);
-    if (i < keys.length - 1) {
-      macro = macro.delay(100);
-    }
-  }
-  return macro;
-}
+import { MacroBuilder, charStrToMacro } from "./MacroBuilder";
 
 const DANCES = {
   SINGLETAP: 'SINGLE_TAP',

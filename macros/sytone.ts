@@ -1,5 +1,4 @@
 
-
 export function prepare(newMacro) {
 
     const macroExtensions = {
@@ -12,9 +11,9 @@ export function prepare(newMacro) {
         "dance_DOUBLEHOLD_A": newMacro()
             .typeAlphanumeric("cp ../moonlander_hacked.bin /mnt/c/tools/"),
         //        case SINGLE_TAP: SEND_STRING("{}"); register_code(KC_LEFT); unregister_code(KC_LEFT); break;
-    }
+    };
 
-    return { macroExtensions }
+    return { macroExtensions };
   }
 
 
