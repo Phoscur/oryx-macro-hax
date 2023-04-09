@@ -1,10 +1,8 @@
 
-import { MacroBuilder, newMacro, processAll } from "./macros";
+import { MacroBuilder } from "../src/macros";
 
-// Point this at wherever your config root folder is
-const LAYOUT = process.env.LAYOUT_FOLDER || 'moonlander_test-layout_source'
-const SOURCE_DIR = `./layout_src/${LAYOUT}/keymap.c`;
 
+export function prepare(newMacro) {
 type DelayCommand = {
     type: "delay";
     ms: number;
@@ -159,20 +157,6 @@ function teleportMacro(openCommand: InputCommand, keys: string[]): MacroBuilder 
 }
 
 const macroExtensions = {
-    "gg": newMacro()
-        .tapKey("X_ENTER")
-        .typeAlphanumeric("(gg)")
-        .tapKey("X_ENTER"),
-    /*"dance_SINGLETAP_A": newMacro()
-        .typeAlphanumeric("git status"),
-    "dance_SINGLEHOLD_A": newMacro()
-        .typeAlphanumeric("git log"),
-    "dance_DOUBLETAP_A": newMacro()
-        .typeAlphanumeric("ls -al"),
-    "dance_DOUBLEHOLD_A": newMacro()
-        .typeAlphanumeric("cp ../moonlander_hacked.bin /mnt/c/tools/"),
-    //        case SINGLE_TAP: SEND_STRING("{}"); register_code(KC_LEFT); unregister_code(KC_LEFT); break;
-
     "bd": executeMacro([[bd()]]),
     "dw": executeMacro([[dw()]]),
     "carom": executeMacro([
@@ -239,14 +223,7 @@ const macroExtensions = {
         .delay(600)
         .click()
         .delay(200)
-        .altTab()*/
+        .altTab()
 }
-
-
-if (typeof require !== 'undefined' && require.main === module) {
-    const layoutFolder = process.argv[2] || process.env.LAYOUT_FOLDER
-    const sourceDir = `./layout_src/${layoutFolder}/keymap.c`;
-    console.log("Keymap Source: " + sourceDir)
-
-    processAll(macroExtensions, sourceDir)
+return { macroExtensions }
 }

@@ -1,4 +1,4 @@
-import { newMacro, processAll } from "./macros";
+import { newMacro, processAll } from "../src/macros";
 
 // Point this at wherever your config root folder is
 const SOURCE_DIR = "./layout_src/moonlander_neophil-autobahn-fueled-wip_source/keymap.c";

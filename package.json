@@ -1,17 +1,16 @@
 {
   "name": "ergodox-macro-hax",
-  "version": "1.1.0",
-  "description": "",
+  "version": "2.0.0",
+  "description": "Oryx Macro Post-Processor",
   "scripts": {
-    "start": "ts-node my-macros.ts",
+    "start": "dotenv cross-var ts-node src/main.ts",
+    "get": "dotenv cross-var ts-node src/oryx-downloader.ts",
     "test": "jest",
     "format": "tsfmt -r",
-    "hax": "dotenv cross-var ts-node my-macros.ts",
-    "get": "dotenv cross-var ts-node oryx-downloader.ts",
     "copy": "cpy ./layout_src/**/keymap.c ./layout_src/**/config.h ./layout_src/**/rules.mk ../keyboards/moonlander/keymaps/hacked",
     "compile": "cd .. && qmk compile -kb moonlander -km hacked"
   },
-  "author": "gittyeric",
+  "author": "Phoscur & gittyeric",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.24.0",

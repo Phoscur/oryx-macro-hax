@@ -1,10 +1,10 @@
 import { describe, it, expect } from '@jest/globals';
 
-
-describe('keymap.c process_record_user', () => {
-  it('should be enhanced', () => {
+describe('Process layout file keymap.c: process_record_user function', () => {
+  it('should expand macros inside C-code', () => {
+    // TODO seperate out file access
     expect(KEYMAPC).toMatch(KEYMAPC_ENHANCED);
-  })
+  });
 });
 
 const KEYMAPC = `
@@ -81,7 +81,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false;
   }
   return true;
-}`
+}`;
 const KEYMAPC_ENHANCED = `
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
@@ -142,7 +142,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     break;
     case ST_MACRO_11:
     if (record->event.pressed) {
-      SEND_STRING(SS_TAP(X_G) SS_DELAY(100) SS_TAP(X_G));
+      SEND_STRING(SS_TAP(X_ENTER) SS_LSFT(SS_TAP(X_8)) SS_DELAY(30) SS_TAP(X_G) SS_DELAY(30) SS_DELAY(30) SS_TAP(X_G) SS_DELAY(30) SS_DELAY(30) SS_LSFT(SS_TAP(X_9)) SS_DELAY(30) SS_TAP(X_ENTER));
     }
     break;
 
@@ -156,4 +156,4 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false;
   }
   return true;
-}`
+}`;
