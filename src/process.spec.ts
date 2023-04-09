@@ -1,14 +1,14 @@
 import { describe, it, expect } from "@jest/globals";
-import { newMacro } from "./MacroBuilder";
+import { charStrToMacro, newMacro } from "./MacroBuilder";
 import { process } from "./process";
 
 describe("Process Macros", () => {
   it("should replace macros in the keymap file with the corresponding macro expansion", () => {
     const macroMap = {
+      "symbo": newMacro()
+        .typeAlphanumeric("=+,;[]!\"' @"), // TODO add "?"
       "gg": newMacro()
-        .tapKey("X_ENTER")
-        .typeAlphanumeric("(gg)")
-        .tapKey("X_ENTER"),
+        .typeAlphanumeric("\n(Gg)\n"),
       dance_SINGLETAP_A: newMacro()
         .typeAlphanumeric("git status"),
       dance_SINGLEHOLD_A: newMacro()
@@ -20,7 +20,12 @@ describe("Process Macros", () => {
     };
 
     const originalKeymap = `
-        case ST_MACRO_11:
+        case ST_MACRO_1:
+        if (record->event.pressed) {
+          SEND_STRING(SS_TAP(X_S) SS_DELAY(100) SS_TAP(X_Y) SS_DELAY(100) SS_TAP(X_M) SS_DELAY(100) SS_TAP(X_B) SS_DELAY(100) SS_TAP(X_O));
+        }
+        break;
+        case ST_MACRO_2:
         if (record->event.pressed) {
           SEND_STRING(SS_TAP(X_G) SS_DELAY(100) SS_TAP(X_G));
         }
@@ -52,9 +57,14 @@ describe("Process Macros", () => {
     const keymap = process(originalKeymap, macroMap);
 
     expect(keymap).toEqual(`
-        case ST_MACRO_11:
+        case ST_MACRO_1:
         if (record->event.pressed) {
-          SEND_STRING(SS_TAP(X_ENTER) SS_LSFT(SS_TAP(X_8)) SS_DELAY(30) SS_TAP(X_G) SS_DELAY(30) SS_DELAY(30) SS_TAP(X_G) SS_DELAY(30) SS_DELAY(30) SS_LSFT(SS_TAP(X_9)) SS_DELAY(30) SS_TAP(X_ENTER));
+          SEND_STRING(SS_TAP(X_EQUAL) SS_DELAY(30) SS_TAP(X_PLUS) SS_DELAY(30) SS_TAP(X_COMMA) SS_DELAY(30) SS_TAP(X_SEMICOLON) SS_DELAY(30) SS_TAP(X_LBRACKET) SS_DELAY(30) SS_TAP(X_RBRACKET) SS_DELAY(30) SS_LSFT(SS_TAP(X_1)) SS_DELAY(30) SS_LSFT(SS_TAP(X_QUOTE)) SS_DELAY(30) SS_TAP(X_QUOTE) SS_DELAY(30) SS_TAP(X_SPACE) SS_DELAY(30) SS_LSFT(SS_TAP(X_2)));
+        }
+        break;
+        case ST_MACRO_2:
+        if (record->event.pressed) {
+          SEND_STRING(SS_TAP(X_ENTER) SS_DELAY(30) SS_LSFT(SS_TAP(X_8)) SS_DELAY(30) SS_LSFT(SS_TAP(X_G)) SS_DELAY(30) SS_TAP(X_G) SS_DELAY(30) SS_DELAY(30) SS_LSFT(SS_TAP(X_9)) SS_DELAY(30) SS_TAP(X_ENTER));
         }
         break;
 
@@ -98,6 +108,16 @@ describe("Process Macros", () => {
       new Error(`Found 0 instances of the "gg" macro but expected 1 instances!
          - Check your config and set the proper value in newMacro()
          Macro code: SEND_STRING(SS_TAP(X_G) SS_DELAY(100) SS_TAP(X_G))`
+    ));
+  });
+  it('should fail if a char is not supported', () => {
+    expect(() => newMacro().typeAlphanumeric("?")).toThrow(
+      new Error(`Unsupported char in typeAlphanumeric: ?, use typeRaw instead?`
+    ));
+  });
+  it('should fail if the macro name is too long', () => {
+    expect(() => charStrToMacro("toolong")).toThrow(
+      new Error(`Please check macro ID length for "toolong"`
     ));
   });
 });

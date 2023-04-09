@@ -183,7 +183,7 @@ export const newMacro: (expectedReplacementCount?: number) => MacroBuilder = (er
 
 export function charStrToMacro(keys: string): MacroBuilder {
     if (keys.length < 1 || keys.length > 5) {
-        throw new Error("Please check macro ID for " + keys);
+        throw new Error(`Please check macro ID length for "${keys}"`);
     }
     let macro = newMacro();
     for (let i = 0; i < keys.length; i++) {
