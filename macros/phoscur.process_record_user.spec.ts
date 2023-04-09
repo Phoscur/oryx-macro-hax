@@ -1,5 +1,6 @@
 import { describe, it, expect } from '@jest/globals';
-import { newMacro, process } from '../src/macros';
+import { newMacro } from '../src/macros';
+import { process } from '../src/process';
 import { prepare } from './phoscur';
 
 describe('Process Phoscur\'s layout file keymap.c: process_record_user function', () => {
