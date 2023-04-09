@@ -2,25 +2,40 @@ import { MacroBuilder, newMacro } from "./macros";
 
 function charStrToMacro(keys: string): MacroBuilder {
   if (keys.length < 1 || keys.length > 5) {
-      throw new Error("Please check macro ID for " + keys);
+    throw new Error("Please check macro ID for " + keys);
   }
   let macro = newMacro();
   for (let i = 0; i < keys.length; i++) {
-      macro = macro.tapKey(`X_${keys[i].toUpperCase()}`)
-      if (i < keys.length - 1) {
-          macro = macro.delay(100);
-      }
+    macro = macro.tapKey(`X_${keys[i].toUpperCase()}`);
+    if (i < keys.length - 1) {
+      macro = macro.delay(100);
+    }
   }
   return macro;
 }
 
-export const process = (keymapC: string, macroMap: {
+const DANCES = {
+  SINGLETAP: 'SINGLE_TAP',
+  SINGLEHOLD: 'SINGLE_HOLD',
+  DOUBLETAP: 'DOUBLE_TAP',
+  DOUBLEHOLD: 'DOUBLE_HOLD',
+};
+
+function danceToFind(macroKeys: string) {
+  if (!macroKeys.startsWith('dance_')) {
+    return "SEND_STRING(" + charStrToMacro(macroKeys).build() + ")";
+  }
+  const step = macroKeys.split("_")[1];
+  return "case " + DANCES[step] + ": register_code16(KC_" + macroKeys.split("_")[2] + "); break;";
+}
+
+export function process(keymapC: string, macroMap: {
   [originalMacroKeys: string]: MacroBuilder;
-}): string => {
+}): string {
   const macroNames = Object.keys(macroMap);
 
   const matchCounts = macroNames.map((macroKeys) => {
-    const toFind = "SEND_STRING(" + charStrToMacro(macroKeys).build() + ")";
+    const toFind = danceToFind(macroKeys);
     const newMacro = macroMap[macroKeys];
     const matchCount = keymapC.split(toFind).length - 1;
     if (matchCount !== newMacro.expectedReplacements) {
@@ -33,12 +48,29 @@ export const process = (keymapC: string, macroMap: {
   });
 
   const newConfig = macroNames.reduce((config, macroKeys, index) => {
-    const toFind = "SEND_STRING(" + charStrToMacro(macroKeys).build() + ")";
+    const toFind = danceToFind(macroKeys);
     const newMacro = macroMap[macroKeys];
     const macro = "SEND_STRING(" + newMacro.build() + ")";
-    for (let i = 0; i < matchCounts[index]; i++) {
-      console.log("Replacing \n" + toFind + "\nwith\n" + macro);
-      config = config.replace(toFind, macro);
+
+    if (!macroKeys.startsWith('dance_')) {
+      for (let i = 0; i < matchCounts[index]; i++) {
+        console.log("Replacing \n" + toFind + "\nwith\n" + macro);
+        config = config.replace(toFind, macro);
+      }
+    } else {
+      const [_, step, keys] = macroKeys.split("_");
+      const newMacro = macroMap[macroKeys];
+      const replacement = "case " + DANCES[step] + ": " + macro + "; break;";
+      const toFindReset = "case " + DANCES[step] + ": unregister_code16(KC_" + keys + "); break;";
+      const replacementReset = "case " + DANCES[step] + ": break;";
+
+      for (let i = 0; i < newMacro.expectedReplacements; i++) {
+        console.log("Replacing \n" + toFind + "\nwith\n" + replacement);
+        config = config.replace(toFind, replacement);
+
+        console.log("Replacing \n" + toFindReset + "\nwith\n" + replacementReset);
+        config = config.replace(toFindReset, replacementReset);
+      }
     }
     return config;
   }, keymapC);
