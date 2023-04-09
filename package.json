@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "start": "ts-node my-macros.ts",
+    "test": "jest",
     "format": "tsfmt -r",
     "hax": "dotenv cross-var ts-node my-macros.ts",
     "get": "dotenv cross-var ts-node oryx-downloader.ts",
@@ -30,11 +31,15 @@
     "json5": "1.0.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.21.4",
+    "@babel/preset-env": "^7.21.4",
+    "@babel/preset-typescript": "^7.21.4",
     "@types/es6-promise": "^3.3.0",
     "@types/jquery": "^3.5.16",
     "@types/node": "^10.17.60",
     "@types/prompts": "^1.2.0",
     "@types/unzipper": "^0.10.5",
+    "babel-jest": "^29.5.0",
     "jest": "^29.5.0"
   }
 }
