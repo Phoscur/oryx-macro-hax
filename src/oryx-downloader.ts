@@ -47,7 +47,7 @@ export async function downloadKeymapSource(layoutHashId, path) {
 
 if (typeof require !== 'undefined' && require.main === module) {
   const hashId = process.argv[2] || process.env.LAYOUT_ID
-  const parentFolder = process.argv[3] || process.env.LAYOUT_DIR || './layout_src'
+  const parentFolder = process.argv[3] || process.env.LAYOUT_SRC || './layout_src'
   const layoutFolder = process.argv[4] || process.env.LAYOUT_FOLDER
   downloadKeymapSource(hashId, parentFolder).then(() => {
     if (!existsSync(join(parentFolder, layoutFolder))) {
