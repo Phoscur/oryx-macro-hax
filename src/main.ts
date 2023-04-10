@@ -12,17 +12,17 @@ const {
 const KEYMAP_SOURCE = `${LAYOUT_SRC || './layout_src'}/${LAYOUT_FOLDER}/keymap.c`;
 
 export default async function main(keymapFile: string) {
-    console.log(`Keymap Source: ${keymapFile}, User: ${USER_NAME}`);
-    const userConfig = await import(MACROS_DIR + USER_NAME);
+    console.log(`Reading Keymap Source: ${keymapFile}, User: ${USER_NAME}`);
+    const userConfig = await import(MACROS_DIR + USER_NAME.toLowerCase());
     const macroMap = userConfig.prepare(newMacro).macroExtensions;
 
     const loaded = readFileSync(keymapFile).toString();
+    const newConfig = expandMacros(loaded, macroMap);
 
     const backup = keymapFile + Math.random() + ".old.c";
-    console.log("Backed up keymap.c to " + backup);
     writeFileSync(backup, loaded);
+    console.log("Backed up keymap.c to " + backup);
 
-    const newConfig = expandMacros(loaded, macroMap);
     writeFileSync(keymapFile, newConfig);
     console.log("ALL done! Proceed with compilation and flashing");
 }
