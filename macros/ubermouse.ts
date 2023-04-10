@@ -1,7 +1,7 @@
 import { MacroBuilder } from "../src/MacroBuilder";
 
 export function prepare(newMacro) {
-    
+
     type DelayCommand = {
         type: "delay";
         ms: number;

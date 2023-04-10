@@ -1,13 +1,13 @@
 import { describe, it, expect } from '@jest/globals';
 import { newMacro } from '../src/MacroBuilder';
-import { process } from '../src/process';
+import { expandMacros } from '../src/expandMacros';
 import { prepare } from './sytone';
 
 describe('Process sytone\'s layout file keymap.c: process_record_user function & dances', () => {
-  it('should expand all macros inside C-code', () => {
-    const userConfig = prepare(newMacro);
-    expect(process(KEYMAPC, userConfig.macroExtensions)).toMatch(KEYMAPC_ENHANCED);
-  });
+    it('should expand all macros inside C-code', () => {
+        const userConfig = prepare(newMacro);
+        expect(expandMacros(KEYMAPC, userConfig.macroExtensions)).toMatch(KEYMAPC_ENHANCED);
+    });
 });
 
 const KEYMAPC = `bool process_record_user(uint16_t keycode, keyrecord_t *record) {

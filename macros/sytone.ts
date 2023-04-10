@@ -14,7 +14,7 @@ export function prepare(newMacro) {
     };
 
     return { macroExtensions };
-  }
+}
 
 
 
