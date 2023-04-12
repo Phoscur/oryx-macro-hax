@@ -3,13 +3,12 @@
   "version": "2.0.0",
   "description": "Oryx Macro Post-Processor",
   "scripts": {
-    "start": "dotenv cross-var ts-node src/main.ts",
-    "get": "dotenv cross-var ts-node src/oryx-downloader.ts",
+    "start": "ts-node -r dotenv/config src/main.ts",
+    "get": "ts-node -r dotenv/config src/oryx-downloader.ts",
     "test": "jest",
     "lint": "eslint",
     "tsc": "tsc --noEmit",
-    "prettier-format": "prettier \"src/**/*.ts\" --write",
-    "format": "tsfmt -r",
+    "format": "prettier \"src/**/*.ts\" --write",
     "copy": "cpy ./layout_src/**/keymap.c ./layout_src/**/config.h ./layout_src/**/rules.mk ../keyboards/moonlander/keymaps/hacked",
     "compile": "cd .. && qmk compile -kb moonlander -km hacked"
   },
@@ -18,16 +17,9 @@
   "dependencies": {
     "axios": "^0.24.0",
     "cpy-cli": "^4.2.0",
-    "cross-var": "1.1.0",
-    "dotenv-cli": "3.0.0",
-    "parse-fraction": "^1.2.1",
-    "pluralize": "^7.0.0",
-    "prompts": "^2.4.2",
+    "dotenv": "^16.0.3",
     "ts-node": "^7.0.1",
     "unzipper": "^0.10.11"
-  },
-  "resolutions": {
-    "json5": "1.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.21.4",
