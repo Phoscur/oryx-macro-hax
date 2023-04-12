@@ -1,40 +1,41 @@
 {
-  "name": "ergodox-macro-hax",
-  "version": "1.1.0",
-  "description": "",
+  "name": "oryx-macro-hax",
+  "version": "2.0.0",
+  "description": "Oryx Macro Post-Processor",
   "scripts": {
-    "start": "ts-node my-macros.ts",
-    "format": "tsfmt -r",
-    "hax": "dotenv cross-var ts-node my-macros.ts",
-    "get": "dotenv cross-var ts-node oryx-downloader.ts",
+    "start": "ts-node -r dotenv/config src/main.ts",
+    "get": "ts-node -r dotenv/config src/oryx-downloader.ts",
+    "test": "jest",
+    "lint": "eslint",
+    "tsc": "tsc --noEmit",
+    "format": "prettier \"src/**/*.ts\" --write",
     "copy": "cpy ./layout_src/**/keymap.c ./layout_src/**/config.h ./layout_src/**/rules.mk ../keyboards/moonlander/keymaps/hacked",
     "compile": "cd .. && qmk compile -kb moonlander -km hacked"
   },
-  "author": "gittyeric",
+  "author": "Phoscur & gittyeric",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.24.0",
-    "cpy-cli": "^3.1.1",
-    "cross-var": "1.1.0",
-    "dotenv-cli": "3.0.0",
-    "parse-fraction": "^1.2.1",
-    "pluralize": "^7.0.0",
-    "prompts": "^2.4.2",
+    "cpy-cli": "^4.2.0",
+    "dotenv": "^16.0.3",
     "ts-node": "^7.0.1",
-    "typescript": "^3.9.10",
-    "typescript-formatter": "^7.2.2",
-    "typings": "^2.1.1",
     "unzipper": "^0.10.11"
   },
-  "resolutions": {
-    "json5": "1.0.2"
-  },
   "devDependencies": {
+    "@babel/core": "^7.21.4",
+    "@babel/preset-env": "^7.21.4",
+    "@babel/preset-typescript": "^7.21.4",
     "@types/es6-promise": "^3.3.0",
     "@types/jquery": "^3.5.16",
     "@types/node": "^10.17.60",
     "@types/prompts": "^1.2.0",
     "@types/unzipper": "^0.10.5",
-    "jest": "^29.5.0"
+    "@typescript-eslint/eslint-plugin": "^5.58.0",
+    "@typescript-eslint/parser": "^5.58.0",
+    "babel-jest": "^29.5.0",
+    "eslint": "^8.38.0",
+    "jest": "^29.5.0",
+    "prettier": "^2.8.7",
+    "typescript": "^5.0.4"
   }
 }

@@ -1,4 +1,4 @@
-# Ergodox Macro Hax
+# Oryx Macro Hax
 
 This is a quick and dirty script to nicely get around the annoying (though reasonable) limitation of Ergodox / Moonlander keyboards in the Oryx configurator where macros can only be five key sequences for security reasons.
 
@@ -39,12 +39,12 @@ It is also recommended to `git branch <your layout name>` and gitignore allowlis
 ## 2. Create a mapping in this script
 
 
-Grab macros.ts or example and change it to what you need
+Copy `macros/example.ts` and change it to what you need, use your lowercased username for the filename.
 
 Here's an example of creating an extended (more than five character) macro:
 
 ```
-const macro = newMacro()
+"funct": newMacro()
     .typeAlphanumeric("function") // Supports a-z and 0-9
     .sendRawCmd("SS_DELAY(100)") // Raw commands in the C file
     .tapKey("X_SPACE") // Tap a raw key code
@@ -68,19 +68,15 @@ The name of the macro tells the system what to replace. always start with 'dance
         .typeAlphanumeric("cp ../moonlander_hacked.bin /mnt/c/tools/"),
 
 ```
+### Tests `npm test (--watch | --coverage)`
 
+You can also create a `user_name.process_record_user.spec.ts` (integration test) or unit tests if you like TDD and test coverage, please also add a unit test if you add a feature to the MacroBuilder!
 
+## 3. Run the post-processor `npm start`
 
-## 3. Run the post-processor
+Run to modify your `keymap.c` and extend your macros. By default layoutFolderName is 'moonlander_default-layout_source'
 
-Run to modify your config and extend your macros. By default layoutFolderName is 'moonlander_default-layout_source'
-
-```
-cd ~/qmk_firmware/ergodox-macro-hax
-npm run hax -- <layoutFolderName>
-```
-
-Run `npm run copy` to copy the processed keymap to the parent keymaps folder (../keyboards/moonlander/keymaps/hacked).
+Optionally, run `npm run copy` to copy the processed keymap to the parent keymaps folder (../keyboards/moonlander/keymaps/hacked).
 
 ## 4. Build Modified Source and Flash it!
 
