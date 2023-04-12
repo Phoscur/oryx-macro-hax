@@ -5,18 +5,14 @@ import { expandMacros } from "./expandMacros";
 describe("Process Macros", () => {
     it("should replace macros in the keymap file with the corresponding macro expansion", () => {
         const macroMap = {
-            "symbo": newMacro()
-                .typeAlphanumeric("=+,;[]!\"' @"), // TODO add "?"
-            "gg": newMacro()
-                .typeAlphanumeric("\n(Gg)\n"),
-            dance_SINGLETAP_A: newMacro()
-                .typeAlphanumeric("git status"),
-            dance_SINGLEHOLD_A: newMacro()
-                .typeAlphanumeric("git log"),
-            dance_DOUBLETAP_A: newMacro()
-                .typeAlphanumeric("ls -al"),
-            dance_DOUBLEHOLD_A: newMacro()
-                .typeAlphanumeric("cp ../moonlander_hacked.bin /mnt/c/tools/"),
+            symbo: newMacro().typeAlphanumeric("=+,;[]!\"' @"), // TODO add "?"
+            gg: newMacro().typeAlphanumeric("\n(Gg)\n"),
+            dance_SINGLETAP_A: newMacro().typeAlphanumeric("git status"),
+            dance_SINGLEHOLD_A: newMacro().typeAlphanumeric("git log"),
+            dance_DOUBLETAP_A: newMacro().typeAlphanumeric("ls -al"),
+            dance_DOUBLEHOLD_A: newMacro().typeAlphanumeric(
+                "cp ../moonlander_hacked.bin /mnt/c/tools/",
+            ),
         };
 
         const originalKeymap = `
@@ -92,9 +88,9 @@ describe("Process Macros", () => {
         }`);
     });
 
-    it('should fail if a macro cannot be found', () => {
+    it("should fail if a macro cannot be found", () => {
         const macroMap = {
-            "gg": newMacro().typeAlphanumeric("(gg)"),
+            gg: newMacro().typeAlphanumeric("(gg)"),
         };
 
         const originalKeymap = `
@@ -107,17 +103,19 @@ describe("Process Macros", () => {
         expect(() => expandMacros(originalKeymap, macroMap)).toThrow(
             new Error(`Found 0 instances of the "gg" macro but expected 1 instances!
          - Check your config and set the proper value in newMacro()
-         Macro code: SEND_STRING(SS_TAP(X_G) SS_DELAY(100) SS_TAP(X_G))`
-            ));
+         Macro code: SEND_STRING(SS_TAP(X_G) SS_DELAY(100) SS_TAP(X_G))`),
+        );
     });
-    it('should fail if a char is not supported', () => {
+    it("should fail if a char is not supported", () => {
         expect(() => newMacro().typeAlphanumeric("?")).toThrow(
-            new Error(`Unsupported char in typeAlphanumeric: ?, use typeRaw instead?`
-            ));
+            new Error(
+                `Unsupported char in typeAlphanumeric: ?, use typeRaw instead?`,
+            ),
+        );
     });
-    it('should fail if the macro name is too long', () => {
+    it("should fail if the macro name is too long", () => {
         expect(() => charStrToMacro("toolong")).toThrow(
-            new Error(`Please check macro ID length for "toolong"`
-            ));
+            new Error(`Please check macro ID length for "toolong"`),
+        );
     });
 });

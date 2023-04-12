@@ -6,7 +6,9 @@
     "start": "dotenv cross-var ts-node src/main.ts",
     "get": "dotenv cross-var ts-node src/oryx-downloader.ts",
     "test": "jest",
-    "lint": "tsc --noEmit",
+    "lint": "eslint",
+    "tsc": "tsc --noEmit",
+    "prettier-format": "prettier \"src/**/*.ts\" --write",
     "format": "tsfmt -r",
     "copy": "cpy ./layout_src/**/keymap.c ./layout_src/**/config.h ./layout_src/**/rules.mk ../keyboards/moonlander/keymaps/hacked",
     "compile": "cd .. && qmk compile -kb moonlander -km hacked"
@@ -22,7 +24,6 @@
     "pluralize": "^7.0.0",
     "prompts": "^2.4.2",
     "ts-node": "^7.0.1",
-    "typescript-formatter": "^7.2.2",
     "unzipper": "^0.10.11"
   },
   "resolutions": {
@@ -37,8 +38,12 @@
     "@types/node": "^10.17.60",
     "@types/prompts": "^1.2.0",
     "@types/unzipper": "^0.10.5",
+    "@typescript-eslint/eslint-plugin": "^5.58.0",
+    "@typescript-eslint/parser": "^5.58.0",
     "babel-jest": "^29.5.0",
+    "eslint": "^8.38.0",
     "jest": "^29.5.0",
+    "prettier": "^2.8.7",
     "typescript": "^5.0.4"
   }
 }

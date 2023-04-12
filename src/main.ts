@@ -1,15 +1,15 @@
 import { readFileSync, writeFileSync } from "fs";
-import { expandMacros } from './expandMacros';
+import { expandMacros } from "./expandMacros";
 import { newMacro } from "./MacroBuilder";
 
 const MACROS_DIR = "../macros/";
-const {
-    LAYOUT_FOLDER,
-    LAYOUT_SRC,
-    USER_NAME,
-} = process.env;
+const { LAYOUT_FOLDER, LAYOUT_SRC, USER_NAME } = process.env;
 
-export default async function main(userName: string, keymapFolder: string, layoutSrc = "./layout_src") {
+export default async function main(
+    userName: string,
+    keymapFolder: string,
+    layoutSrc = "./layout_src",
+) {
     const keymapSource = `${layoutSrc}/${keymapFolder}/keymap.c`;
     console.log(`Reading Keymap Source for User ${userName}: ${keymapSource}`);
     if (!userName || !(typeof userName === "string")) {
@@ -29,6 +29,10 @@ export default async function main(userName: string, keymapFolder: string, layou
     console.log("ALL done! Proceed with compilation and flashing");
 }
 
-if (typeof require !== 'undefined' && require.main === module) {
-    main(process.argv[2] || USER_NAME, process.argv[3] || LAYOUT_FOLDER, process.argv[4] || LAYOUT_SRC);
+if (typeof require !== "undefined" && require.main === module) {
+    main(
+        process.argv[2] || USER_NAME,
+        process.argv[3] || LAYOUT_FOLDER,
+        process.argv[4] || LAYOUT_SRC,
+    );
 }

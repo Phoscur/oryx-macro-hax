@@ -1,5 +1,3 @@
-
-
 # EditorConfig is awesome: https://EditorConfig.org
 
 # top-most EditorConfig file
@@ -18,8 +16,7 @@ charset = utf-8
 indent_style = space
 indent_size = 4
 
-# Matches the exact files either package.json or .travis.yml
-[{package.json,.travis.yml}]
+# Matches the exact file: package.json - and yaml files
+[{package.json,*.yml}]
 indent_style = space
 indent_size = 2
-
