@@ -9,7 +9,7 @@ describe('Process sytone\'s layout file keymap.c: process_record_user function &
         expect(expandMacros(KEYMAPC, userConfig.macroExtensions)).toMatch(KEYMAPC_ENHANCED);
     });
 });
-
+// TODO? use snapshot(s)
 const KEYMAPC = `bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case ST_MACRO_0:

@@ -10,6 +10,7 @@ describe('Process Phoscur\'s layout file keymap.c: process_record_user function'
     });
 });
 
+// TODO? use snapshot(s)
 const KEYMAPC = `
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
