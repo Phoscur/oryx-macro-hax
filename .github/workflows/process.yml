@@ -11,6 +11,7 @@ jobs:
     env:
       LAYOUT_ID: ${{ vars.LAYOUT_ID }}
       LAYOUT_FOLDER: ${{ vars.LAYOUT_FOLDER }}
+      USER_NAME: ${{ github.repository.owner.name }}
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js
@@ -23,6 +24,8 @@ jobs:
         run: npm run get
       - name: Process macros
         run: npm start
+        env:
+          USER_NAME: ${{ github.repository.owner.name }}
       - name: Compile QMK Firmware from source
         uses: Phoscur/QMK-compile@main
         with:

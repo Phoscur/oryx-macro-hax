@@ -1,4 +1,4 @@
-# Ergodox Macro Hax
+# Oryx Macro Hax
 
 This is a quick and dirty script to nicely get around the annoying (though reasonable) limitation of Ergodox / Moonlander keyboards in the Oryx configurator where macros can only be five key sequences for security reasons.
 

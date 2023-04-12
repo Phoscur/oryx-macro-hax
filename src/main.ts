@@ -9,24 +9,26 @@ const {
     USER_NAME,
 } = process.env;
 
-const KEYMAP_SOURCE = `${LAYOUT_SRC || './layout_src'}/${LAYOUT_FOLDER}/keymap.c`;
-
-export default async function main(keymapFile: string) {
-    console.log(`Reading Keymap Source: ${keymapFile}, User: ${USER_NAME}`);
-    const userConfig = await import(MACROS_DIR + USER_NAME.toLowerCase());
+export default async function main(userName: string, keymapFolder: string, layoutSrc = "./layout_src") {
+    const keymapSource = `${layoutSrc}/${keymapFolder}/keymap.c`;
+    console.log(`Reading Keymap Source for User ${userName}: ${keymapSource}`);
+    if (!userName || !(typeof userName === "string")) {
+        throw new Error("USER_NAME cannot be empty");
+    }
+    const userConfig = await import(MACROS_DIR + userName.toLowerCase());
     const macroMap = userConfig.prepare(newMacro).macroExtensions;
 
-    const loaded = readFileSync(keymapFile).toString();
+    const loaded = readFileSync(keymapSource).toString();
     const newConfig = expandMacros(loaded, macroMap);
 
-    const backup = keymapFile + Math.random() + ".old.c";
+    const backup = keymapSource + Math.random() + ".old.c";
     writeFileSync(backup, loaded);
     console.log("Backed up keymap.c to " + backup);
 
-    writeFileSync(keymapFile, newConfig);
+    writeFileSync(keymapSource, newConfig);
     console.log("ALL done! Proceed with compilation and flashing");
 }
 
 if (typeof require !== 'undefined' && require.main === module) {
-    main(KEYMAP_SOURCE);
+    main(USER_NAME, LAYOUT_FOLDER, LAYOUT_SRC);
 }
