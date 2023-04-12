@@ -30,5 +30,5 @@ export default async function main(userName: string, keymapFolder: string, layou
 }
 
 if (typeof require !== 'undefined' && require.main === module) {
-    main(USER_NAME, LAYOUT_FOLDER, LAYOUT_SRC);
+    main(process.argv[2] || USER_NAME, process.argv[3] || LAYOUT_FOLDER, process.argv[4] || LAYOUT_SRC);
 }

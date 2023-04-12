@@ -23,7 +23,7 @@ jobs:
       - name: Get ORYX layout
         run: npm run get
       - name: Process macros
-        run: npm start
+        run: npm start -- ${{ github.repository.owner.name }}
         env:
           USER_NAME: ${{ github.repository.owner.name }}
       - name: Compile QMK Firmware from source
