@@ -5,10 +5,12 @@ import unzipper from "unzipper";
 
 const ORYX_GRAPHQL_URL = "https://oryx.zsa.io/graphql";
 
-export async function getKeymapSourceLink(hashId: string, revisionId = "latest"): Promise<string> {
+export async function getKeymapSourceLink(hashId: string, revisionId = "latest") {
     const query = `
     query getLayout($hashId: String!, $revisionId: String!, $geometry: String) {
         layout(hashId: $hashId, geometry: $geometry, revisionId: $revisionId) {
+            title
+            geometry
             revision {
                 zipUrl
             }
@@ -18,6 +20,8 @@ export async function getKeymapSourceLink(hashId: string, revisionId = "latest")
         data: {
             data: {
                 layout: {
+                    title: string,
+                    geometry: string,
                     revision: {
                         zipUrl: string,
                     },
@@ -25,7 +29,9 @@ export async function getKeymapSourceLink(hashId: string, revisionId = "latest")
             },
         },
     };
-    const { data } = await axios.post<unknown, LayoutZipUrlData>(ORYX_GRAPHQL_URL, {
+    const { data: { data: { layout: { 
+        title, geometry, revision: { zipUrl }
+    }}}} = await axios.post<unknown, LayoutZipUrlData>(ORYX_GRAPHQL_URL, {
         operationName: "getLayout",
         variables: {
             hashId,
@@ -34,7 +40,11 @@ export async function getKeymapSourceLink(hashId: string, revisionId = "latest")
         },
         query,
     });
-    return data.data.layout.revision.zipUrl;
+    return {
+        title,
+        geometry,
+        zipUrl,
+    };
 }
 
 export async function unzipKeymapSource(url:string , path: string): Promise<void> {
@@ -47,11 +57,14 @@ export async function unzipKeymapSource(url:string , path: string): Promise<void
 }
 
 export async function downloadKeymapSource(layoutHashId: string, path: string) {
-    const zipUrl = await getKeymapSourceLink(layoutHashId);
+    const { title, geometry, zipUrl } = await getKeymapSourceLink(layoutHashId);
+    const folderName = `${geometry}_${title.toLowerCase().replace(" ", "-")}_source`;
+    // TODO? other transformed chars? console.log(`Predicted folder name: ${folderName}`, geometry, title);
     await unzipKeymapSource(zipUrl, path);
     console.log(
-        `Downloaded layout "${layoutHashId}" to ${path} (from ${zipUrl}).`,
+        `Downloaded layout "${title}" [${layoutHashId}] to ${path} (from ${zipUrl}).`,
     );
+    return folderName;
 }
 
 if (typeof require !== "undefined" && require.main === module) {
@@ -60,10 +73,20 @@ if (typeof require !== "undefined" && require.main === module) {
     const parentFolder =
         process.argv[4] || process.env.LAYOUT_SRC || "./layout_src";
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    downloadKeymapSource(hashId, parentFolder).then(() => {
+    downloadKeymapSource(hashId, parentFolder).then(folderName => {
+        if (!existsSync(join(parentFolder, folderName))) {
+            console.error(`Expected folder "${folderName}" in the archive was not found!`);
+        } else {
+            console.log("Unpacked folder:", folderName);
+            // TODO save LAYOUT_FOLDER
+            if (folderName !== layoutFolder) {
+                console.warn(`Given layout folder name "${layoutFolder}" does not match "${folderName}"`);
+            }
+            process.exit(0);
+        }
         if (!existsSync(join(parentFolder, layoutFolder))) {
             console.warn(
-                `WARNING: Please check your environment: configured LAYOUT_FOLDER was not found: ${parentFolder}/${layoutFolder}`,
+                `Please check your environment: configured LAYOUT_FOLDER was not found: ${parentFolder}/${layoutFolder}`,
             );
         } else {
             console.log("Unpacked folder:", layoutFolder);
