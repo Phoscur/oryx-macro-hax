@@ -1,9 +1,17 @@
 import { readFileSync, writeFileSync } from "fs";
 import { expandMacros } from "./expandMacros";
-import { newMacro } from "./MacroBuilder";
+import { newMacro, MacroBuilder } from "./MacroBuilder";
 
 const MACROS_DIR = "../macros/";
 const { LAYOUT_FOLDER, LAYOUT_SRC, USER_NAME } = process.env;
+
+interface UserConfig {
+    prepare(newMacro: (expectedReplacementCount?: number) => MacroBuilder): {
+        macroExtensions: {
+            [id: string]: MacroBuilder,
+        },
+    }
+}
 
 export default async function main(
     userName: string,
@@ -15,13 +23,13 @@ export default async function main(
     if (!userName || !(typeof userName === "string")) {
         throw new Error("USER_NAME cannot be empty");
     }
-    const userConfig = await import(MACROS_DIR + userName.toLowerCase());
+    const userConfig = await import(MACROS_DIR + userName.toLowerCase()) as UserConfig;
     const macroMap = userConfig.prepare(newMacro).macroExtensions;
 
     const loaded = readFileSync(keymapSource).toString();
     const newConfig = expandMacros(loaded, macroMap);
 
-    const backup = keymapSource + Math.random() + ".old.c";
+    const backup = `${keymapSource}${Math.random()}.old.c`;
     writeFileSync(backup, loaded);
     console.log("Backed up keymap.c to " + backup);
 
@@ -30,6 +38,7 @@ export default async function main(
 }
 
 if (typeof require !== "undefined" && require.main === module) {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     main(
         process.argv[2] || USER_NAME,
         process.argv[3] || LAYOUT_FOLDER,

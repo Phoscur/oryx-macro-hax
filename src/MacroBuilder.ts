@@ -39,7 +39,7 @@ export interface MacroBuilder {
 }
 
 export const newMacro: (expectedReplacementCount?: number) => MacroBuilder = (
-    erc: number = 1,
+    erc = 1,
 ) => {
     const commands: (() => string)[] = [];
     const self: MacroBuilder = {
@@ -62,7 +62,7 @@ export const newMacro: (expectedReplacementCount?: number) => MacroBuilder = (
         // https://github.com/qmk/qmk_firmware/blob/master/quantum/send_string/send_string_keycodes.h
         typeAlphanumeric: (
             strToType: string,
-            msDelayBetweenStrokes: number = 30,
+            msDelayBetweenStrokes = 30,
         ) => {
             for (let i = 0; i < strToType.length; i++) {
                 const char = strToType[i];
@@ -129,7 +129,7 @@ export const newMacro: (expectedReplacementCount?: number) => MacroBuilder = (
             return self;
         },
         delay: (msDelay: number) => {
-            self.sendRawCmd("SS_DELAY(" + msDelay + ")");
+            self.sendRawCmd(`SS_DELAY(${msDelay})`);
             return self;
         },
         sendRawCmd: (rawCmd: string) => {
@@ -152,11 +152,10 @@ export const newMacro: (expectedReplacementCount?: number) => MacroBuilder = (
         // Runs some inner macro while holding down all
         // modifier keys
         withModifiers: (innerMacro: MacroBuilder, rawModifiers: string[]) => {
+            const openModifiers = rawModifiers.map((m) => `${m}(`).join();
+            const closeModifiers = rawModifiers.map(() => ")").join();
             commands.push(
-                () =>
-                    rawModifiers.map((m) => `${m}(`) +
-                    innerMacro.build() +
-                    rawModifiers.map(() => ")"),
+                () => `${openModifiers}${innerMacro.build()}${closeModifiers}`,
             );
             return self;
         },
