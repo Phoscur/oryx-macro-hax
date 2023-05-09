@@ -11,7 +11,7 @@ jobs:
     env:
       LAYOUT_ID: ${{ vars.LAYOUT_ID }}
       LAYOUT_FOLDER: ${{ vars.LAYOUT_FOLDER }}
-      USER_NAME: ${{ github.event.repository.owner.name }}
+      USER_NAME: ${{ github.repository_owner }}
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js
