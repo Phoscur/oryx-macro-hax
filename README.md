@@ -8,7 +8,7 @@ This hack is a post-processor that'll take your raw "Source" Oryx configuration 
 
 ## 0. Initial setup
 
-_If you are willing to wait (ca. 3mins) on [Github Actions ](./.github/workflows/process.yml) to compile your firmware after pushing, you could skip installing QMK on your local machine!_
+_If you are willing to wait (ca. 3-9mins) on [Github Actions ](./.github/workflows/process.yml) to compile your firmware after pushing, you could skip installing QMK on your local machine!_
 
 To compile the firmware on your machine, setup the [ZSA QMK Fork with guide referenced](https://github.com/zsa/qmk_firmware)
 
@@ -32,6 +32,7 @@ When done, take a note of the `layout hash ID` in the URL or download the source
 Copy `.env.dist` creating a `.env` file with your configuration, create [Github Action variables](https://github.com/Phoscur/oryx-macro-hax/settings/variables/actions):
 - `LAYOUT_ID`: hashId of your layout keymap
 - `LAYOUT_FOLDER`:  name of the folder of your keymap in the source archive
+- `USER_NAME`: your github username
 
 
 It is also recommended to `git branch <your layout name>` and gitignore allowlist `!layout_src/<your layout name>` , if you want to track the C source of your keymap (don't merge this branch into your main branch!).
