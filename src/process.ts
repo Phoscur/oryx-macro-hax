@@ -38,7 +38,6 @@ export default async function main(
 }
 
 if (typeof require !== "undefined" && require.main === module) {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     main(
         process.argv[2] || USER_NAME,
         process.argv[3] || LAYOUT_FOLDER,
