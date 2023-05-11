@@ -5,7 +5,8 @@ import { hideBin } from "yargs/helpers";
 import config from "../package.json";
 import { downloadKeymapSource, getKeymapSourceLink } from "./download";
 import processMacros from "./process";
-import { readdir } from "fs/promises";
+import { readdir, lstat } from "fs/promises";
+import { join } from "path";
 const yargs = _yargs(hideBin(process.argv));
 
 const UNSPECIFIED = "unspecified";
@@ -74,7 +75,14 @@ export async function main(storage: LocalStorage) {
             },
             async function (argv) {
                 const username = await storage.getItem("username");
-                console.log("Username:", argv.username, "ENV:", USER_NAME, "Storage:", username);
+                console.log(
+                    "Username:",
+                    argv.username,
+                    "ENV:",
+                    USER_NAME,
+                    "Storage:",
+                    username,
+                );
                 if (!argv.username || argv.username === UNSPECIFIED) {
                     if (!USER_NAME && !username) {
                         console.error("No username given or saved!");
@@ -91,29 +99,78 @@ export async function main(storage: LocalStorage) {
         )
         .help().argv;
     prompt.override(argv);
-    console.log('ARGV', argv);
+    console.log("ARGV", argv);
     if (argv._.includes("get")) {
-        await downloadKeymapSource(argv.layoutID as string, LAYOUT_SRC || LAYOUT_SRC_DEFAULT);
+        await downloadKeymapSource(
+            argv.layoutID as string,
+            LAYOUT_SRC || LAYOUT_SRC_DEFAULT,
+        );
     }
-    if (argv._.includes("process")) {
-        let layoutFolder = LAYOUT_FOLDER || await storage.getItem("layoutFolder") as string;
+    async function getLayoutFolder() {
+        let layoutFolder =
+            LAYOUT_FOLDER ||
+            ((await storage.getItem("layoutFolder")) as string);
         if (!layoutFolder) {
-            const layoutID: string = await storage.getItem("layoutID");
+            const layoutID: string =
+                LAYOUT_ID ||
+                argv.layoutID ||
+                (await storage.getItem("layoutID"));
             if (!layoutID) {
-                console.error("No LAYOUT_FOLDER given, also no LAYOUT_ID found.");
-                process.exit(1)
+                console.error(
+                    "No LAYOUT_FOLDER given, also no LAYOUT_ID found.",
+                );
+                process.exit(1);
             }
             const { folderName } = await getKeymapSourceLink(layoutID);
-            // TODO? confirm 
             layoutFolder = folderName;
             await storage.setItem("layoutFolder", layoutFolder);
         }
-        await processMacros(argv.username as string, layoutFolder, LAYOUT_SRC || LAYOUT_SRC_DEFAULT)
+        return layoutFolder;
+    }
+
+    async function checkLayoutFolder(folder: string) {
+        try {
+            const stat = await lstat(
+                join(LAYOUT_SRC || LAYOUT_SRC_DEFAULT, folder),
+            );
+            return stat.isDirectory();
+        } catch (err) {
+            return false;
+        }
+    }
+    if (argv._.includes("process")) {
+        const layoutFolder = await getLayoutFolder();
+        if (!(await checkLayoutFolder(layoutFolder))) {
+            console.error(`Layout Folder "${layoutFolder}" not found!`);
+            const folders = (
+                await readdir(LAYOUT_SRC || LAYOUT_SRC_DEFAULT)
+            ).filter((f: string) => f.includes("_source"));
+            if (!folders.length) {
+                console.log(`Run the "get" command first or manually download a layout into ${LAYOUT_SRC || LAYOUT_SRC_DEFAULT}!`);
+                process.exit(1);
+            } else {
+                console.log("Candidates:", folders.map(f => `- ${f}`).join("\n"));
+                console.log("You can manually overwrite your environment config with the correct one:");
+                console.log(`- e.g. LAYOUT_FOLDER=${folders[0]}`);
+                console.warn("Please open an issue to support the special chars in your layout title!?");
+                process.exit(1);
+            }
+        }
+        await processMacros(
+            argv.username as string,
+            layoutFolder,
+            LAYOUT_SRC || LAYOUT_SRC_DEFAULT,
+        );
     }
     // TODO prompts for layoutID & username
-    // TODO actually run commands to validate choices before persisting
 
-    // await readdir()
+    const layoutFolder = await getLayoutFolder();
+    console.log("Folder", layoutFolder, await checkLayoutFolder(layoutFolder) ? "found." : "not found!");
+    const files = await readdir(join(LAYOUT_SRC || LAYOUT_SRC_DEFAULT, layoutFolder));
+    console.log(
+        files.includes("keymap.c") ? "Keymap File found." : "No Keymap File found!",
+    );
+    console.log("Use --help overview options!");
 }
 
 if (typeof require !== "undefined" && require.main === module) {
