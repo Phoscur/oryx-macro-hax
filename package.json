@@ -3,7 +3,8 @@
   "version": "2.0.0",
   "description": "Oryx Macro Post-Processor",
   "scripts": {
-    "start": "ts-node -r dotenv/config src/process.ts",
+    "start": "ts-node -r dotenv/config src/main.ts",
+    "process": "ts-node -r dotenv/config src/process.ts",
     "get": "ts-node -r dotenv/config src/download.ts",
     "test": "jest",
     "lint": "eslint",

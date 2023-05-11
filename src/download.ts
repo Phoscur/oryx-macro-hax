@@ -49,10 +49,14 @@ export async function getKeymapSourceLink(
         },
         query,
     });
+    const folderName = `${geometry}_${title
+        .toLowerCase()
+        .replace(" ", "-")}_source`;
     return {
         title,
         geometry,
         zipUrl,
+        folderName,
     };
 }
 
@@ -67,10 +71,7 @@ export async function unzipKeymapSource(
 }
 
 export async function downloadKeymapSource(layoutHashId: string, path: string) {
-    const { title, geometry, zipUrl } = await getKeymapSourceLink(layoutHashId);
-    const folderName = `${geometry}_${title
-        .toLowerCase()
-        .replace(" ", "-")}_source`;
+    const { title, folderName, zipUrl } = await getKeymapSourceLink(layoutHashId);
     // TODO? other transformed chars? console.log(`Predicted folder name: ${folderName}`, geometry, title);
     await unzipKeymapSource(zipUrl, path);
     console.log(
