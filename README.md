@@ -1,8 +1,12 @@
 # Oryx Macro Hax
 
-This is a quick and dirty script to nicely get around the annoying (though reasonable) limitation of Ergodox / Moonlander keyboards in the Oryx configurator where macros can only be five key sequences for security reasons.
+This is a quick and dirty script to nicely get around the annoying (though reasonable) limitation of Ergodox / Moonlander keyboards in the Oryx configurator where macros can only be ~five~ twentyfour key sequences for security reasons.
 
 This hack is a post-processor that'll take your raw "Source" Oryx configuration and extend your macros to be any arbitrary sequence.
+
+**Edit 25th of april 2025**: Now that ZSA allows for longer macros, you'll only need this tool under rare circumstances. It can still be groundwork if you want to post-process the keymap C-code for elaborate reasons...
+
+There's also another tool if you want to copy whole layers from other layouts (see [#6](https://github.com/Phoscur/oryx-macro-hax/issues/6)): [ORYX Layer Inserter](https://github.com/Phoscur/oryx-layer-inserter)
 
 # Complete configuration flow
 
